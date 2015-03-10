@@ -38,6 +38,7 @@ module tslotnut ()
             square ([outer_width, flat_height], center = true);
         }
 
+        rotate (90, Z)
         translate ([0, 0, -epsilon])
         scale ([1, 1, 10])
         mcad_nut_hole (size = 5, clearance = 0.05);
