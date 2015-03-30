@@ -1,6 +1,7 @@
 include <MCAD/units/metric.scad>
 include <MCAD/motors/stepper.scad>
 use <MCAD/shapes/boxes.scad>
+use <MCAD/shapes/polyhole.scad>
 
 tslot_profile = 20;
 tslot_width = 40;
@@ -122,69 +123,33 @@ module corner_shape ()
     }
 }
 
-/* module corner_shape ()
+module place_extrusion_screwholes ()
 {
-    outer_edge_distance = (tslot_thickness / cos (30) * 2 +
-        tslot_separation * 2 + tslot_thickness);
+    // vertical extrusion
+    for (i = [1/4, 3/4] * tslot_width)
+    translate ([0, 0, i])
+    {
+        // outside facing holes
+        rotate (-90, X)
+        translate ([0, 0, -(tslot_width + min_wall_thickness + epsilon)])
+        children ();
 
-    triangle_y_offset = outer_edge_distance / 2 / tan (30);
-
-    motor_width = motorWidth (Nema17);
-
-    min_inner_width = tslot_thickness + tslot_separation * 2;
-
-    motor_distance = max (
-        (motor_width + min_wall_thickness * 6 - min_inner_width) / 2 * tan (60),
-        lookup (NemaFrontAxleLength, Nema17) + 5
-    );
-
-    linear_extrude (height = motor_width)
-    difference () {
-        round (-10)
-        union () {
-            // truncated triangle
-            difference () {
-                translate ([0, -triangle_y_offset, 0])
-                rotate (-90, Z)
-                round (r = 20)
-                equi_triangle (side = 200, center = false);
-
-                translate ([-500, motor_distance])
-                square ([1000, 1000]);
-            }
-
-            // protrusion for extra tslot width
-            offset (r = min_wall_thickness)
-            translate ([-tslot_thickness / 2, -tslot_width])
-            square ([tslot_thickness, tslot_width]);
-
-            for (direction = [1, -1])
-            translate ([direction * min_inner_width / 2, 0])
-            rotate (-direction * 30, Z)
-            translate ([direction * tslot_thickness, 0])
-            mirror_if (direction > 0, X)
-            square ([tslot_thickness + min_wall_thickness,
-                    motor_distance * 2.5]);
-        }
-
-        // gap for stepper motor
-        round (r = 5)
-        offset (r = -min_wall_thickness)
-        trapezoid (
-            d = min_inner_width,
-            u = min_inner_width + motor_distance / tan (60) * 2,
-            h = motor_distance
-        );
-
-        // hole for the 40mm extrusion
+        // side holes
+        for (i = [1, -1])
+        mirror_if (i < 0, X)
+        rotate (-90, Y)
+        translate ([0, -30, -(tslot_thickness / 2 + min_wall_thickness)])
+        children ();
     }
 
-    translate ([0,
-            motor_distance - lookup (NemaRoundExtrusionHeight, Nema17),
-            motor_width / 2])
-    rotate (-90, X)
-    motor (Nema17);
-} */
+    // horizontal extrusion
+    place_horizontal_extrusion ()
+    for (y = [1/5, 3/4] * arm_length)
+    for (tslot_pos = [10, 30])
+    translate ([min_wall_thickness + epsilon, y, tslot_pos])
+    rotate (-90, Y)
+    children ();
+}
 
 module bottom_corner ()
 {
@@ -210,11 +175,14 @@ module bottom_corner ()
             horizontal_extrusion_shape ();
         }
 
-        for (direction = [1, -1])
-        translate ([direction * base_inner_width / 2, 0, -2])
-        rotate (-direction * 30, Z)
-        mirror_if (direction < 0, X)
-        cube ([tslot_thickness + 1, arm_length * 2, tslot_width + 2]);
+        place_extrusion_screwholes () {
+            translate ([0, 0, -epsilon])
+            mcad_polyhole (d = 5.3, h = min_wall_thickness + tslot_thickness / 2);
+
+            // cap screw head
+            mirror (Z)
+            mcad_polyhole (d = 8.53, h = 100);
+        }
     }
 }
 
@@ -232,4 +200,4 @@ module extrusions ()
 }
 
 bottom_corner ();
-*%extrusions ();
+%extrusions ();
