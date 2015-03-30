@@ -151,6 +151,20 @@ module place_extrusion_screwholes ()
     children ();
 }
 
+module motor_cutout ()
+{
+    screw_spacing = motorScrewSpacing (motor);
+
+    for (x = [1, -1] * screw_spacing / 2)
+    for (y = [1, -1] * screw_spacing / 2)
+    translate ([x, y, -epsilon])
+    mcad_polyhole (d = 3.3, h = min_wall_thickness + epsilon * 2);
+
+    translate ([0, 0, -epsilon])
+    mcad_polyhole (d = lookup (NemaRoundExtrusionDiameter, motor) + 0.3,
+        h = min_wall_thickness + epsilon * 2);
+}
+
 module bottom_corner ()
 {
     motor_plate_width = motor_width + min_wall_thickness * 6;
@@ -183,6 +197,10 @@ module bottom_corner ()
             mirror (Z)
             mcad_polyhole (d = 8.53, h = 100);
         }
+
+        #translate ([0, motor_distance, -motor_width / 2 + tslot_width])
+        rotate (90, X)
+        motor_cutout ();
     }
 }
 
