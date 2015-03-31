@@ -159,7 +159,7 @@ module place_extrusion_screwholes ()
     translate ([0, 0, i])
     {
         // outside facing holes
-        for (tslot_pos = [-10, 10])
+        for (tslot_pos = [-0.5, 0.5] * tslot_profile)
         rotate (-90, X)
         translate ([tslot_pos, 0,
                 -(tslot_thickness + min_wall_thickness + epsilon)])
@@ -174,7 +174,7 @@ module place_extrusion_screwholes ()
             along_arm (motor_distance * 0.4),
             along_arm (motor_distance + (arm_length - motor_distance) * 0.4)
         ])
-    for (tslot_pos = [10, 30])
+    for (tslot_pos = [0.5, 1.5] * tslot_profile)
     translate ([min_wall_thickness + epsilon, y, tslot_pos])
     rotate (-90, Y)
     children ();
