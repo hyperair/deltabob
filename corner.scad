@@ -8,9 +8,8 @@ tslot_width = 40;
 tslot_thickness = 20;
 tslot_slot_width = 5;
 
-tslot_separation = 2;
-
 min_wall_thickness = 5;
+tslot_separation = min_wall_thickness;
 
 motor = Nema17;
 motor_width = motorWidth (motor);
