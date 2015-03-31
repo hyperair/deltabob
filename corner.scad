@@ -20,6 +20,14 @@ arm_length = 80;
 base_inner_width = tslot_width + tslot_separation * 2;
 clearance = 0.1;
 
+motor_plate_min_width = motor_width + min_wall_thickness * 6;
+motor_distance = max (
+    (motor_plate_min_width - base_inner_width) / 2 * tan (60),
+    lookup (NemaFrontAxleLength, motor) + min_wall_thickness * 2,
+    min_wall_thickness * 2 + 10 // estimated space for carriage
+);
+
+motor_plate_width = base_inner_width + motor_distance * tan (30) * 2;
 $fs = 0.4;
 $fa = 1;
 
@@ -90,6 +98,13 @@ module place_horizontal_extrusion ()
     children ();
 }
 
+module place_motor ()
+{
+    translate ([0, motor_distance, -motor_width / 2 + tslot_width])
+    rotate (90, X)
+    children ();
+}
+
 module corner_shape ()
 {
     chord_length = (tslot_thickness / cos (30) * 2 + base_inner_width);
@@ -141,8 +156,13 @@ module place_extrusion_screwholes ()
     }
 
     // horizontal extrusion
+    function along_arm (length) = length / cos (30);
+
     place_horizontal_extrusion ()
-    for (y = [1/5, 3/4] * arm_length)
+    for (y = [
+            along_arm (motor_distance * 0.4),
+            along_arm (motor_distance + (arm_length - motor_distance) * 0.4)
+        ])
     for (tslot_pos = [10, 30])
     translate ([min_wall_thickness + epsilon, y, tslot_pos])
     rotate (-90, Y)
@@ -177,19 +197,6 @@ module extrusion_cap_screw ()
 
 module bottom_corner ()
 {
-    motor_plate_width = motor_width + min_wall_thickness * 6;
-    motor_distance = max (
-        (motor_plate_width - base_inner_width) / 2 * tan (60),
-        lookup (NemaFrontAxleLength, Nema17) + 5 + min_wall_thickness * 2
-    );
-
-    module place_motor ()
-    {
-        translate ([0, motor_distance, -motor_width / 2 + tslot_width])
-        rotate (90, X)
-        children ();
-    }
-
     difference () {
         linear_extrude (height = tslot_width)
         difference () {
