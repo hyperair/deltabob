@@ -18,7 +18,7 @@ motor_width = motorWidth (motor);
 arm_length = 80;
 
 base_inner_width = tslot_width + tslot_separation * 2;
-clearance = 0.3;
+clearance = 0.1;
 
 $fs = 0.4;
 $fa = 1;
