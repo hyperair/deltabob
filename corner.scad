@@ -14,10 +14,12 @@ tslot_separation = min_wall_thickness;
 motor = Nema17;
 motor_width = motorWidth (motor);
 
-arm_length = 80;
+arm_length = 60;
+
+clearance = 0.1;
 
 base_inner_width = tslot_width + tslot_separation * 2;
-clearance = 0.1;
+base_outer_width = base_inner_width + 2 * tslot_thickness / cos (30);
 
 motor_plate_min_width = motor_width + min_wall_thickness * 6;
 motor_distance = max (
@@ -27,6 +29,10 @@ motor_distance = max (
 );
 
 motor_plate_width = base_inner_width + motor_distance * tan (30) * 2;
+
+corner_rounding_r = 20;
+
+
 $fs = 0.4;
 $fa = 1;
 
@@ -110,16 +116,22 @@ module corner_shape ()
     triangle_y_offset = chord_length / 2 / tan (30);
 
     difference () {
-        round (-5)
         union () {
-            // truncated triangle
+            // base corner shape
             difference () {
-                translate ([0, -triangle_y_offset, 0])
-                rotate (-90, Z)
-                round (r = 40)
-                equi_triangle (side = 200, center = false);
+                h_above_x = corner_rounding_r;
+                h_below_x = tslot_thickness + min_wall_thickness;
+                trapezoid_h = h_above_x + h_below_x;
 
-                // truncate the triangle
+                round (r = corner_rounding_r)
+                translate ([0, -h_below_x])
+                trapezoid (
+                    u = base_outer_width + 2 * h_above_x / tan (60),
+                    d = base_outer_width - 2 * h_below_x / tan (60),
+                    h = trapezoid_h
+                );
+
+                // truncate bits above x axis
                 translate ([-500, 0])
                 square ([1000, 1000]);
             }
