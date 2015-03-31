@@ -6,6 +6,7 @@ use <MCAD/shapes/polyhole.scad>
 tslot_profile = 20;
 tslot_width = 40;
 tslot_thickness = 20;
+tslot_slot_width = 5;
 
 tslot_separation = 2;
 
@@ -17,6 +18,7 @@ motor_width = motorWidth (motor);
 arm_length = 80;
 
 base_inner_width = tslot_thickness + tslot_separation * 2;
+clearance = 0.3;
 
 $fs = 0.4;
 $fa = 1;
@@ -62,12 +64,21 @@ module round (r)
     children ();
 }
 
-module vertical_extrusion_shape ()
+module vertical_extrusion_shape (with_clearance = false)
 {
+    w = with_clearance ? tslot_thickness + clearance : tslot_thickness;
+    h = with_clearance ? tslot_width + clearance : tslot_width;
+
     // poke hole for vertical extrusion
-    translate ([-tslot_thickness / 2, 0])
+    translate ([-w / 2, 0])
     mirror (Y)
-    square ([tslot_thickness, tslot_width]);
+    square ([w, h]);
+}
+
+module horizontal_extrusion_shape ()
+{
+    place_horizontal_extrusion ()
+    square ([tslot_thickness, arm_length]);
 }
 
 module place_horizontal_extrusion ()
@@ -77,12 +88,6 @@ module place_horizontal_extrusion ()
     translate ([base_inner_width / 2, 0])
     rotate (-30, Z)
     children ();
-}
-
-module horizontal_extrusion_shape ()
-{
-    place_horizontal_extrusion ()
-    square ([tslot_thickness, arm_length]);
 }
 
 module corner_shape ()
@@ -165,6 +170,18 @@ module motor_cutout ()
         h = min_wall_thickness + epsilon * 2);
 }
 
+module extrusion_cap_screw ()
+{
+    // screw hole
+    translate ([0, 0, -epsilon])
+    mcad_polyhole (d = 5.3,
+        h = min_wall_thickness + tslot_thickness / 2);
+
+    // cap screw head
+    mirror (Z)
+    mcad_polyhole (d = 8.53, h = 100);
+}
+
 module bottom_corner ()
 {
     motor_plate_width = motor_width + min_wall_thickness * 6;
@@ -185,20 +202,14 @@ module bottom_corner ()
                 square ([motor_plate_width, min_wall_thickness]);
             }
 
-            vertical_extrusion_shape ();
+            vertical_extrusion_shape (with_clearance = true);
             horizontal_extrusion_shape ();
         }
 
-        place_extrusion_screwholes () {
-            translate ([0, 0, -epsilon])
-            mcad_polyhole (d = 5.3, h = min_wall_thickness + tslot_thickness / 2);
+        place_extrusion_screwholes ()
+        extrusion_cap_screw ();
 
-            // cap screw head
-            mirror (Z)
-            mcad_polyhole (d = 8.53, h = 100);
-        }
-
-        #translate ([0, motor_distance, -motor_width / 2 + tslot_width])
+        translate ([0, motor_distance, -motor_width / 2 + tslot_width])
         rotate (90, X)
         motor_cutout ();
     }
