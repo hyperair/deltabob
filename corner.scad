@@ -17,7 +17,7 @@ motor_width = motorWidth (motor);
 
 arm_length = 80;
 
-base_inner_width = tslot_thickness + tslot_separation * 2;
+base_inner_width = tslot_width + tslot_separation * 2;
 clearance = 0.3;
 
 $fs = 0.4;
@@ -66,8 +66,8 @@ module round (r)
 
 module vertical_extrusion_shape (with_clearance = false)
 {
-    w = with_clearance ? tslot_thickness + clearance : tslot_thickness;
-    h = with_clearance ? tslot_width + clearance : tslot_width;
+    h = with_clearance ? tslot_thickness + clearance : tslot_thickness;
+    w = with_clearance ? tslot_width + clearance : tslot_width;
 
     // poke hole for vertical extrusion
     translate ([-w / 2, 0])
@@ -92,8 +92,7 @@ module place_horizontal_extrusion ()
 
 module corner_shape ()
 {
-    chord_length = (tslot_thickness / cos (30) * 2 +
-        tslot_separation * 2 + tslot_thickness);
+    chord_length = (tslot_thickness / cos (30) * 2 + base_inner_width);
     triangle_y_offset = chord_length / 2 / tan (30);
 
     difference () {
@@ -103,7 +102,7 @@ module corner_shape ()
             difference () {
                 translate ([0, -triangle_y_offset, 0])
                 rotate (-90, Z)
-                round (r = 20)
+                round (r = 40)
                 equi_triangle (side = 200, center = false);
 
                 // truncate the triangle
@@ -113,8 +112,7 @@ module corner_shape ()
 
             // protrusion for extra tslot width
             offset (r = min_wall_thickness)
-            translate ([-tslot_thickness / 2, -tslot_width])
-            square ([tslot_thickness, tslot_width]);
+            vertical_extrusion_shape ();
 
             // arm length
             for (direction = [1, -1])
@@ -135,15 +133,10 @@ module place_extrusion_screwholes ()
     translate ([0, 0, i])
     {
         // outside facing holes
+        for (tslot_pos = [-10, 10])
         rotate (-90, X)
-        translate ([0, 0, -(tslot_width + min_wall_thickness + epsilon)])
-        children ();
-
-        // side holes
-        for (i = [1, -1])
-        mirror_if (i < 0, X)
-        rotate (-90, Y)
-        translate ([0, -30, -(tslot_thickness / 2 + min_wall_thickness)])
+        translate ([tslot_pos, 0,
+                -(tslot_thickness + min_wall_thickness + epsilon)])
         children ();
     }
 
@@ -187,8 +180,15 @@ module bottom_corner ()
     motor_plate_width = motor_width + min_wall_thickness * 6;
     motor_distance = max (
         (motor_plate_width - base_inner_width) / 2 * tan (60),
-        lookup (NemaFrontAxleLength, Nema17) + 5
+        lookup (NemaFrontAxleLength, Nema17) + 5 + min_wall_thickness * 2
     );
+
+    module place_motor ()
+    {
+        translate ([0, motor_distance, -motor_width / 2 + tslot_width])
+        rotate (90, X)
+        children ();
+    }
 
     difference () {
         linear_extrude (height = tslot_width)
@@ -209,10 +209,18 @@ module bottom_corner ()
         place_extrusion_screwholes ()
         extrusion_cap_screw ();
 
-        translate ([0, motor_distance, -motor_width / 2 + tslot_width])
-        rotate (90, X)
+        place_motor ()
         motor_cutout ();
     }
+
+    %place_motor ()
+    mirror (Z)
+    translate ([0, 0, -lookup (NemaRoundExtrusionHeight, motor)])
+    motor (motor);
+}
+
+module top_corner ()
+{
 }
 
 module extrusions ()
@@ -223,7 +231,8 @@ module extrusions ()
     place_horizontal_extrusion ()
     single_bar ();
 
-    translate ([-10, 0, 0])
+    translate ([tslot_width / 2, 0, 0])
+    rotate (-90, Z)
     rotate (90, X)
     single_bar ();
 }
