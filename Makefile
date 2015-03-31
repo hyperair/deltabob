@@ -1,5 +1,6 @@
 SCADFILES = \
-	tslotnut.scad
+	tslotnut.scad \
+	corner.scad
 
 all: $(SCADFILES:.scad=.stl)
 
