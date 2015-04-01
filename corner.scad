@@ -16,7 +16,7 @@ motor_width = motorWidth (motor);
 
 arm_length = 60;
 
-clearance = 0.1;
+clearance = 0.2;
 
 base_inner_width = tslot_width + tslot_separation * 2;
 base_outer_width = base_inner_width + 2 * tslot_thickness / cos (30);
