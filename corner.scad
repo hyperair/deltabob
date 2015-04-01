@@ -148,6 +148,10 @@ module corner_shape ()
             mirror_if (direction > 0, X)
             square ([tslot_thickness + min_wall_thickness,
                     arm_length]);
+
+            translate ([-motor_plate_width / 2,
+                    -min_wall_thickness + motor_distance])
+            square ([motor_plate_width, min_wall_thickness]);
         }
     }
 }
@@ -215,9 +219,6 @@ module bottom_corner ()
             union () {
                 corner_shape ();
 
-                translate ([-motor_plate_width / 2,
-                        -min_wall_thickness + motor_distance])
-                square ([motor_plate_width, min_wall_thickness]);
             }
 
             vertical_extrusion_shape (with_clearance = true);
