@@ -175,7 +175,7 @@ module place_extrusion_screwholes ()
 
     place_horizontal_extrusion ()
     for (y = [
-            along_arm (motor_distance * 0.4),
+            along_arm (motor_distance * 0.3),
             along_arm (motor_distance + (arm_length - motor_distance) * 0.4)
         ])
     for (tslot_pos = [0.5, 1.5] * tslot_profile)
