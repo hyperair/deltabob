@@ -4,6 +4,9 @@ include <MCAD/fasteners/nuts_and_bolts.scad>
 use <MCAD/shapes/boxes.scad>
 use <MCAD/shapes/polyhole.scad>
 
+hextrusion_length = 260;
+vextrusion_length = 600;
+
 tslot_profile = 20;
 tslot_width = 40;
 tslot_thickness = 20;
@@ -32,6 +35,11 @@ motor_distance = max (
 motor_plate_width = base_inner_width + motor_distance * tan (30) * 2;
 
 corner_rounding_r = 20;
+
+triangle_offset = base_outer_width / 2 / tan (30);
+
+echo ("distance along normal from base_inner_width to tip of triangle: ",
+    triangle_offset);
 
 
 $fs = 0.4;
@@ -301,17 +309,41 @@ module top_corner ()
 
 module extrusions ()
 {
-    module single_bar ()
-    cube ([tslot_thickness, 400, tslot_width]);
+    module single_bar (length)
+    cube ([tslot_thickness, length, tslot_width]);
 
+    for (z = [0, vextrusion_length - tslot_width])
+    translate ([0, 0, z])
     place_horizontal_extrusion ()
-    single_bar ();
+    single_bar (hextrusion_length);
 
     translate ([tslot_width / 2, 0, 0])
     rotate (-90, Z)
     rotate (90, X)
-    single_bar ();
+    single_bar (vextrusion_length);
 }
 
-bottom_corner ();
-%extrusions ();
+triangle_base_length = hextrusion_length + 2 * (
+    triangle_offset / cos (30) - tslot_thickness * cos (30));
+triangle_h = triangle_base_length * cos (30);
+centroid_offset = triangle_h / 3 * 2;
+
+for (i = [0, 120, 240])
+rotate (i, Z)
+translate ([0, triangle_offset - centroid_offset, 0])
+{
+    bottom_corner ();
+
+    translate ([0, 0, vextrusion_length - tslot_width])
+    !top_corner ();
+
+    %extrusions ();
+}
+
+actual_build_diameter = triangle_base_length / tan (60);
+rounded_build_diameter = floor (actual_build_diameter / 10) * 10;
+echo ("Build diameter: ", rounded_build_diameter);
+
+// plate
+%translate ([0, 0, tslot_width + 10])
+cylinder (d = rounded_build_diameter, h = 3);
