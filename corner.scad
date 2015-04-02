@@ -1,5 +1,6 @@
 include <MCAD/units/metric.scad>
 include <MCAD/motors/stepper.scad>
+include <MCAD/fasteners/nuts_and_bolts.scad>
 use <MCAD/shapes/boxes.scad>
 use <MCAD/shapes/polyhole.scad>
 
@@ -116,6 +117,7 @@ module corner_shape ()
     triangle_y_offset = chord_length / 2 / tan (30);
 
     difference () {
+        round (-5)
         union () {
             // base corner shape
             difference () {
@@ -153,6 +155,21 @@ module corner_shape ()
                     -min_wall_thickness + motor_distance])
             square ([motor_plate_width, min_wall_thickness]);
         }
+
+        // extrusion cutouts
+        vertical_extrusion_shape (with_clearance = true);
+        horizontal_extrusion_shape ();
+    }
+}
+
+module generic_corner ()
+{
+    difference () {
+        linear_extrude (height = tslot_width)
+        corner_shape ();
+
+        place_extrusion_screwholes ()
+        extrusion_cap_screw ();
     }
 }
 
@@ -213,20 +230,7 @@ module extrusion_cap_screw ()
 module bottom_corner ()
 {
     difference () {
-        linear_extrude (height = tslot_width)
-        difference () {
-            round (-5)
-            union () {
-                corner_shape ();
-
-            }
-
-            vertical_extrusion_shape (with_clearance = true);
-            horizontal_extrusion_shape ();
-        }
-
-        place_extrusion_screwholes ()
-        extrusion_cap_screw ();
+        generic_corner ();
 
         place_motor ()
         motor_cutout ();
@@ -238,8 +242,61 @@ module bottom_corner ()
     motor (motor);
 }
 
+module filleted_cylinder (d1, d2, h, fillet_r, chamfer_r)
+{
+    rotate_extrude () {
+        intersection () {
+            round (chamfer_r)
+            round (-fillet_r)
+            union () {
+                intersection () {
+                    trapezoid (d = d1, u = d2, h = h);
+
+                    translate ([0, 500])
+                    square ([1000, 1000], center = true);
+                }
+
+                mirror (Y)
+                square ([1000, 1000]);
+            }
+
+            square ([1000, 1000]);
+        }
+    }
+}
+
 module top_corner ()
 {
+    idler_hub_d = base_inner_width * 0.5;
+    idler_hub_h = min_wall_thickness * 0.8;
+
+    // idler hub
+    difference () {
+        union () {
+            generic_corner ();
+
+            place_motor ()
+            translate ([0, 0, motor_distance + epsilon - min_wall_thickness])
+            mirror (Z)
+            filleted_cylinder (
+                d1 = idler_hub_d, d2 = idler_hub_d - idler_hub_h * 2,
+                h = idler_hub_h,
+                fillet_r = 5,
+                chamfer_r = 2
+            );
+        }
+
+        // screwhole
+        place_motor () {
+            translate ([0, 0, -epsilon])
+            mcad_polyhole (d = 3.3, h = motor_distance + epsilon * 2);
+
+            rotate (90, Z)
+            translate ([0, 0,
+                    min_wall_thickness - METRIC_NUT_THICKNESS[3] + epsilon])
+            mcad_nut_hole (3);
+        }
+    }
 }
 
 module extrusions ()
