@@ -335,7 +335,7 @@ translate ([0, triangle_offset - centroid_offset, 0])
     bottom_corner ();
 
     translate ([0, 0, vextrusion_length - tslot_width])
-    !top_corner ();
+    top_corner ();
 
     %extrusions ();
 }
