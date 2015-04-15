@@ -4,7 +4,7 @@ include <MCAD/fasteners/nuts_and_bolts.scad>
 use <MCAD/shapes/boxes.scad>
 use <MCAD/shapes/polyhole.scad>
 
-hextrusion_length = 260;
+hextrusion_length = 270;
 vextrusion_length = 600;
 
 tslot_profile = 20;
