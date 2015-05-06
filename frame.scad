@@ -3,6 +3,7 @@ include <MCAD/motors/stepper.scad>
 include <MCAD/fasteners/nuts_and_bolts.scad>
 use <MCAD/shapes/boxes.scad>
 use <MCAD/shapes/polyhole.scad>
+use <utils.scad>
 
 hextrusion_length = 270;
 vextrusion_length = 600;
@@ -49,16 +50,6 @@ module tslot_interface (slot_width, length, thickness = 1)
 {
     translate ([-slot_width / 2, 0, 0])
     cube ([slot_width, length, thickness]);
-}
-
-module mirror_if (value, axis = X)
-{
-    if (value) {
-        mirror (axis)
-        children ();
-    } else {
-        children ();
-    }
 }
 
 module trapezoid (u, d, h)
