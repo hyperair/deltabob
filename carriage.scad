@@ -34,6 +34,7 @@ belt_clearance = 0.1;
 
 rod_separation = 50;
 carriage_hinge_offset = 22;
+arm_thickness = 8;
 
 $fs = 0.4;
 $fa = 1;
@@ -129,10 +130,10 @@ module parallel_joints (reinforced) {
         union () {
             // front of arms
             intersection () {
-                cube ([width, 20, 8], center=true); //
+                cube ([width, 20, arm_thickness], center = true);
 
                 rotate (90, Y)
-                cylinder (r=5, h=width, center=true);
+                cylinder (d = arm_thickness + 2, h=width, center = true);
             }
 
             // longer arms
@@ -140,13 +141,14 @@ module parallel_joints (reinforced) {
                 [
                     width,
                     carriage_hinge_offset - carriage_base_thickness + epsilon,
-                    8],
+                    arm_thickness
+                ],
                 center = X + Z
             );
 
             // reinforcement
             intersection () {
-                translate ([0, 18, 4])
+                translate ([0, 18, arm_thickness / 2])
                 rotate (45, X)
                 cube ([width, reinforced, reinforced], center=true);
 
