@@ -158,7 +158,7 @@ module parallel_joints (reinforced) {
         }
 
         // screwholes
-        rotate ([0, 90, 0])
+        rotate (90, Y)
         mcad_polyhole (d = 3.3, h = width + 2, center=true);
 
         for (x = [-offset, offset])
