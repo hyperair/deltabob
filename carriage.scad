@@ -189,8 +189,9 @@ module carriage ()
     translate ([belt_x_offset, 0, carriage_base_thickness - epsilon])
     gt2_belt_clamp ();
 
+    translate ([0, 0, carriage_hinge_offset - epsilon])
     rotate (-90, X)
-    !parallel_joints (16);
+    parallel_joints (16);
 }
 
 carriage ();
