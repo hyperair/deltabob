@@ -177,7 +177,7 @@ module parallel_joints (reinforced) {
         }
 
         // middle cutout
-        translate ([0, 2, 0])
+        translate ([0, 6, 0])
         hull ()
         mcad_linear_multiply (no = 2, separation = 20, axis = -Y)
         mcad_polyhole (d = middle * 2, h = 100, center = true);
