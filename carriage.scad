@@ -1,6 +1,8 @@
+use <MCAD/array/along_curve.scad>
 use <MCAD/shapes/boxes.scad>
 use <MCAD/shapes/polyhole.scad>
 use <MCAD/shapes/2Dshapes.scad>
+use <MCAD/fasteners/nuts_and_bolts.scad>
 include <MCAD/units/metric.scad>
 use <utils.scad>
 
@@ -29,6 +31,9 @@ belt_clamp_height = belt_width + 2;
 belt_clamp_width = belt_thickness + 3 * 2;
 
 belt_clearance = 0.1;
+
+rod_separation = 50;
+carriage_hinge_offset = 22;
 
 $fs = 0.4;
 $fa = 1;
@@ -114,12 +119,78 @@ module gt2_belt (tooth_count, $fs = 0.01, $fa = 1)
 
 }
 
+module parallel_joints (reinforced) {
+    width = carriage_width;
+    cutout = 13;
+    offset = rod_separation / 2;
+    middle = 2*offset - width/2;
+
+    difference () {
+        union () {
+            // front of arms
+            intersection () {
+                cube ([width, 20, 8], center=true); //
+
+                rotate (90, Y)
+                cylinder (r=5, h=width, center=true);
+            }
+
+            // longer arms
+            ccube (
+                [
+                    width,
+                    carriage_hinge_offset - carriage_base_thickness + epsilon,
+                    8],
+                center = X + Z
+            );
+
+            // reinforcement
+            intersection () {
+                translate ([0, 18, 4])
+                rotate (45, X)
+                cube ([width, reinforced, reinforced], center=true);
+
+                translate ([0, 0, 20])
+                cube ([width, 35, 40], center=true);
+            }
+        }
+
+        // screwholes
+        rotate ([0, 90, 0])
+        mcad_polyhole (d = 3.3, h = width + 2, center=true);
+
+        for (x = [-offset, offset])
+        translate ([x, 0, 0]) {
+            // reliefs for u-joint movement
+            translate ([0, 5.5, 0])
+            hull ()
+            mcad_linear_multiply (no = 2, separation = 20, axis = -Y)
+            mcad_polyhole (d = cutout, h = 100);
+
+            // nut hole
+            rotate (90, Y)
+            rotate (30, Z)
+            linear_extrude (height = 17, center = true)
+            mcad_nut_hole (size = 3, proj = 1);
+        }
+
+        // middle cutout
+        translate ([0, 2, 0])
+        hull ()
+        mcad_linear_multiply (no = 2, separation = 20, axis = -Y)
+        mcad_polyhole (d = middle * 2, h = 100, center = true);
+    }
+}
+
 module carriage ()
 {
     carriage_base ();
 
     translate ([belt_x_offset, 0, carriage_base_thickness - epsilon])
     gt2_belt_clamp ();
+
+    rotate (-90, X)
+    !parallel_joints (16);
 }
 
 carriage ();
