@@ -167,7 +167,7 @@ module parallel_joints (reinforced) {
             translate ([0, 5.5, 0])
             hull ()
             mcad_linear_multiply (no = 2, separation = 20, axis = -Y)
-            mcad_polyhole (d = cutout, h = 100);
+            mcad_polyhole (d = cutout, h = 100, center = true);
 
             // nut hole
             rotate (90, Y)
