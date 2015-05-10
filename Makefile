@@ -5,7 +5,8 @@ OPENSCAD = openscad
 SCADFILES =					\
 	tslotnut.scad				\
 	top-corner.scad				\
-	bottom-corner.scad
+	bottom-corner.scad			\
+	carriage.scad
 STLFILES = $(SCADFILES:.scad=.stl)
 DEPFILES = $(addsuffix deps,$(SCADFILES))
 
