@@ -23,6 +23,7 @@ carriage_base_thickness = 5;
 
 belt_clamp_tooth_count = 12;
 belt_x_offset = 5.093;          // 16-tooth pulley
+belt_y_offset = -15;
 belt_width = 6;
 belt_thickness = 1.38;
 
@@ -35,6 +36,8 @@ belt_clearance = 0.1;
 rod_separation = 50;
 carriage_hinge_offset = 22;
 arm_thickness = 10;
+
+arms_y_offset = 10;
 
 $fs = 0.4;
 $fa = 1;
@@ -188,10 +191,10 @@ module carriage ()
 {
     carriage_base ();
 
-    translate ([belt_x_offset, 0, carriage_base_thickness - epsilon])
+    translate ([belt_x_offset, belt_y_offset, carriage_base_thickness - epsilon])
     gt2_belt_clamp ();
 
-    translate ([0, 0, carriage_hinge_offset - epsilon])
+    translate ([0, arms_y_offset, carriage_hinge_offset - epsilon])
     rotate (-90, X)
     parallel_joints (16);
 }
