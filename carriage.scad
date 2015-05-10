@@ -34,7 +34,7 @@ belt_clearance = 0.1;
 
 rod_separation = 50;
 carriage_hinge_offset = 22;
-arm_thickness = 8;
+arm_thickness = 10;
 
 $fs = 0.4;
 $fa = 1;
