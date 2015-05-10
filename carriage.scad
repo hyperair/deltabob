@@ -2,6 +2,7 @@ use <MCAD/array/along_curve.scad>
 use <MCAD/shapes/boxes.scad>
 use <MCAD/shapes/polyhole.scad>
 use <MCAD/shapes/2Dshapes.scad>
+use <MCAD/shapes/triangles.scad>
 use <MCAD/fasteners/nuts_and_bolts.scad>
 include <MCAD/units/metric.scad>
 use <utils.scad>
@@ -77,7 +78,16 @@ module gt2_belt_clamp ()
                         belt_clamp_height + epsilon],
                     center = [true, true, false]);
 
-                for (i = [1, -1])
+                // side fillets
+                for (x = [1, -1])
+                mirror_if (x < 1, X)
+                translate ([belt_clamp_width / 2 - epsilon, 0, 0])
+                rotate (90, X)
+                linear_extrude (height = belt_clamp_length, center = true)
+                rounded_fillet_shape (r = 5);
+
+                // disabled buttress stiffener
+                *for (i = [1, -1])
                 mirror_if (i < 0, Y)
                 translate ([0, -belt_clamp_length / 2])
                 rotate (90, X)
@@ -89,14 +99,38 @@ module gt2_belt_clamp ()
                     left_angle = -60, right_angle = -60);
             }
 
-            gt2_belt (belt_clamp_tooth_count + 2);
+            gt2_belt (tooth_count = belt_clamp_tooth_count + 2,
+                width = belt_clamp_height + 1);
+
+            // chamfered entrance for easier installation
+            translate ([0, 0, belt_clamp_height + epsilon * 2])
+            rotate (90, X)
+            linear_extrude (height = belt_clamp_length + epsilon * 2,
+                center = true)
+            projection (cut = true)
+            mirror (Y)
+            triangle (o_len = 5, a_len = 2, depth = 1);
+
+            // screwhole and nut trap
+            translate ([
+                    0,
+                    0,
+                    belt_width + 2 + 3 / 2
+                ])
+            rotate (90, Y)
+            rotate (90, Z) {
+                translate ([0, 0, -belt_clamp_width / 2 - epsilon])
+                mcad_nut_hole (size = 3);
+                mcad_polyhole (d = 3.3, h = belt_clamp_width + epsilon * 2,
+                    center = true);
+            }
         }
     }
 }
 
-module gt2_belt (tooth_count, $fs = 0.01, $fa = 1)
+module gt2_belt (tooth_count, width, $fs = 0.01, $fa = 1)
 {
-    linear_extrude (height = belt_clamp_height + 1)
+    linear_extrude (height = width)
     for (i = [0:tooth_count])
     rotate (-90, Z)
     translate ([(i - tooth_count / 2) * 2, 0])
@@ -187,12 +221,29 @@ module parallel_joints (reinforced) {
     }
 }
 
+module rounded_fillet_shape (r)
+{
+    difference () {
+        square ([r, r]);
+
+        translate ([r, r])
+        circle (r = r);
+    }
+}
+
 module carriage ()
 {
     carriage_base ();
 
-    translate ([belt_x_offset, belt_y_offset, carriage_base_thickness - epsilon])
+    translate (
+        [belt_x_offset, belt_y_offset, carriage_base_thickness - epsilon]
+    )
     gt2_belt_clamp ();
+
+    %for (i = [1, -1])
+    mirror_if (i < 0, X)
+    translate ([belt_x_offset, 0, carriage_base_thickness + 0.5])
+    gt2_belt (carriage_length / 2, belt_width);
 
     translate ([0, arms_y_offset, carriage_hinge_offset - epsilon])
     rotate (-90, X)
