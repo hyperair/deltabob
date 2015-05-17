@@ -118,11 +118,11 @@ module gt2_belt_clamp ()
             translate ([
                     0,
                     0,
-                    belt_width + 2 + 3 / 2
+                    belt_clamp_height - 3 / 2 - 2
                 ])
             rotate (90, Y)
             rotate (90, Z) {
-                translate ([0, 0, -belt_clamp_width / 2 - epsilon])
+                translate ([0, 0, -belt_clamp_width / 2 - 1])
                 mcad_nut_hole (size = 3, tolerance = 0.1);
                 mcad_polyhole (d = 3.3, h = belt_clamp_width + epsilon * 2,
                     center = true);
