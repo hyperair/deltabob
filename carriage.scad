@@ -107,9 +107,11 @@ module gt2_belt_clamp ()
             rotate (90, X)
             linear_extrude (height = belt_clamp_length + epsilon * 2,
                 center = true)
-            projection (cut = true)
-            mirror (Y)
-            triangle (o_len = 5, a_len = 2, depth = 1);
+            polygon ([
+                    [-2, 0],
+                    [0, -5],
+                    [2, 0]
+                ]);
 
             // screwhole and nut trap
             translate ([
