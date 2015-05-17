@@ -24,13 +24,14 @@ carriage_base_thickness = 5;
 
 belt_clamp_tooth_count = 12;
 belt_x_offset = 5.093;          // 16-tooth pulley
-belt_y_offset = -15;
 belt_width = 6;
 belt_thickness = 1.38;
 
 belt_clamp_length = belt_clamp_tooth_count * 2;
 belt_clamp_height = belt_width + 10;
 belt_clamp_width = belt_thickness + 3 * 2;
+
+belt_y_offset = (belt_clamp_length - carriage_length) / 2;
 
 belt_clearance = 0.1;
 
