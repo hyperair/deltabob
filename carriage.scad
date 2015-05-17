@@ -248,6 +248,7 @@ module carriage ()
     gt2_belt (carriage_length / 2, belt_width);
 
     translate ([0, arms_y_offset, carriage_hinge_offset - epsilon])
+    rotate (180, Z)
     rotate (-90, X)
     parallel_joints (16);
 }
