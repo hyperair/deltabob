@@ -6,7 +6,8 @@ SCADFILES =					\
 	tslotnut.scad				\
 	top-corner.scad				\
 	bottom-corner.scad			\
-	carriage.scad
+	carriage.scad				\
+	eccentric-spacer.scad
 STLFILES = $(SCADFILES:.scad=.stl)
 DEPFILES = $(addsuffix deps,$(SCADFILES))
 
