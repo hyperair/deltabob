@@ -14,7 +14,7 @@ wheel_separation_parallel = wheel_separation_perpendicular;
 spacer_eccentricity = 1;
 
 eccentric_spacer_id = 5;
-eccentric_spacer_od = 7;
+eccentric_spacer_od = 8;
 
 carriage_width = (wheel_separation_perpendicular + eccentric_spacer_od / 2 +
     min_wall_thickness * 2);
