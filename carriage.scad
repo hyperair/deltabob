@@ -70,6 +70,11 @@ module carriage_base ()
     }
 }
 
+module m3_nut_hole (proj = -1)
+{
+    mcad_nut_hole (size = 3, proj = proj, tolerance = m3_nut_tolerance);
+}
+
 
 module gt2_belt_clamp ()
 {
@@ -125,7 +130,7 @@ module gt2_belt_clamp ()
             rotate (90, Y)
             rotate (90, Z) {
                 translate ([0, 0, -belt_clamp_width / 2 - 1])
-                mcad_nut_hole (size = 3, tolerance = m3_nut_tolerance);
+                m3_nut_hole ();
                 mcad_polyhole (d = 3.3, h = belt_clamp_width + epsilon * 2,
                     center = true);
             }
@@ -215,7 +220,7 @@ module parallel_joints (reinforced) {
             rotate (90, Y)
             rotate (30, Z)
             linear_extrude (height = 17, center = true)
-            mcad_nut_hole (size = 3, proj = 1, tolerance = m3_nut_tolerance);
+            m3_nut_hole (proj = 1);
         }
 
         // middle cutout
