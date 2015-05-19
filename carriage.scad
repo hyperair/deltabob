@@ -63,6 +63,7 @@ module carriage_base ()
 
         for (x = [0.5, -0.5] * wheel_separation_perpendicular)
 
+        // eccentric spacer holes
         for (y = [0.5, -0.5] * wheel_separation_parallel)
         translate ([x, y, -epsilon])
         mcad_polyhole (d = eccentric_spacer_od,
