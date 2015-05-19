@@ -41,7 +41,7 @@ arm_thickness = 10;
 
 arms_y_offset = 10;
 
-m3_nut_tolerance = 0.05;
+m3_nut_tolerance = 0.01;
 
 $fs = 0.4;
 $fa = 1;
