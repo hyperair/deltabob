@@ -56,7 +56,7 @@ module jaws (bridge_helper) {
     // cube for bridge helper
     if (bridge_helper)
     translate ([plug_length + plug_offset - epsilon, 0, 0])
-    ccube (size = [2, plug_d * 2, d], center = [false, true, true]);
+    ccube (size = [3, plug_d * 2, h], center = [false, true, true]);
 }
 
 translate ([0, 0, h/2])
