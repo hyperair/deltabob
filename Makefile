@@ -7,7 +7,8 @@ SCADFILES =					\
 	top-corner.scad				\
 	bottom-corner.scad			\
 	carriage.scad				\
-	eccentric-spacer.scad
+	eccentric-spacer.scad			\
+	jaws.scad
 STLFILES = $(SCADFILES:.scad=.stl)
 DEPFILES = $(addsuffix deps,$(SCADFILES))
 
