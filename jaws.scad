@@ -11,7 +11,7 @@ jaw_inner_width = 8.4;
 jaw_outer_width = 14;
 plug_offset = 20;
 
-jaw_depth = r * 1.5;
+jaw_depth = jaw_inner_width * 0.5;
 
 $fs = 0.4;
 $fa = 1;
@@ -31,46 +31,8 @@ module jaws () {
             cube ([1000, jaw_outer_width, h], center = true);
         }
 
-        *union () {
-            intersection () {
-                rotate ([90, 0, 0])
-                cylinder (r = h / 2, h = jaw_outer_width, center = true);
-
-                translate ([-4, 0, 0])
-                cube ([10, 14, h], center = true);
-            }
-
-            intersection () {
-                translate ([12, 0, 0])
-                cube ([26, 14, h], center = true);
-
-                translate ([10, 0, 0])
-                rotate ([0, 90, 0])
-                rotate ([0, 0, 30])
-                cylinder (r1 = 10, r2 = r, h = 26, center = true, $fn = 6);
-            }
-        }
-
-        translate ([3.5 - 5, 0, 0])
-        cube ([10, jaw_inner_width, h], center = true);
-
-        *union () {
-            translate ([3.5, 0, 0])
-            rotate ([0, 0, 30])
-            cylinder (r = 4.2, h = 10, center = true, $fn = 6);
-
-            translate ([4, 0, 4])
-            rotate ([0, 45, 0])
-            rotate ([0, 0, 30])
-            cylinder (r = 4.2, h = 8, center = true, $fn = 6);
-
-            translate ([4, 0, -4])
-            rotate ([0, -45, 0])
-            rotate ([0, 0, 30])
-            cylinder (r = 4.2, h = 8, center = true, $fn = 6);
-        }
-
         for (a = [45, 0, -45])
+        translate ([(a == 0) ? jaw_depth : 0, 0, 0])
         rotate (a, Y)
         hull ()
         mcad_linear_multiply (2, 30, axis = -X)
@@ -82,4 +44,5 @@ module jaws () {
     }
 }
 
-translate ([0, 0, h/2]) jaws ();
+translate ([0, 0, h/2])
+jaws ();
