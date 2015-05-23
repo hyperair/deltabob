@@ -3,22 +3,30 @@ use <MCAD/shapes/2Dshapes.scad>
 use <MCAD/shapes/polyhole.scad>
 include <MCAD/units/metric.scad>
 
+// outer diameter of tube
 h = 9.6;
-d = h / cos (30);
-r = d / 2;
 
+// standard rostock settings
 jaw_inner_width = 8.4;
 jaw_outer_width = 14;
+
+// adjusts the shape of the taper and length of the plug
 plug_offset = 20;
 plug_d = 6.45;
 plug_length = 20;
 
+// a square at the end to ease with the overhang
+bridge_helper = true;
+
+// automatically calculated
+d = h / cos (30);
+r = d / 2;
 jaw_depth = jaw_inner_width * 0.5;
 
 $fs = 0.4;
 $fa = 1;
 
-module jaws (bridge_helper) {
+module jaws () {
     difference () {
         intersection () {
             union () {
@@ -27,7 +35,8 @@ module jaws (bridge_helper) {
 
                 rotate (90, Y)
                 rotate (30, Z)
-                cylinder (d1 = jaw_outer_width * 1.6, d2 = d, h = plug_offset, $fn = 6);
+                cylinder (d1 = jaw_outer_width * 1.6, d2 = d, h = plug_offset,
+                    $fn = 6);
             }
 
             cube ([1000, jaw_outer_width, h], center = true);
