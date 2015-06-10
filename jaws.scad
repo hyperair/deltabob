@@ -4,7 +4,7 @@ use <MCAD/shapes/polyhole.scad>
 include <MCAD/units/metric.scad>
 
 // outer diameter of tube
-h = 9.6;
+h = 7;
 
 // standard rostock settings
 jaw_inner_width = 8.4;
