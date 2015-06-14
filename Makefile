@@ -3,12 +3,17 @@ DXF_OUTLINES = $(INKSCAPEDIR)/dxf_outlines.py
 OPENSCAD = openscad
 
 SCADFILES =					\
-	tslotnut.scad				\
-	top-corner.scad				\
+	bedholder.scad				\
 	bottom-corner.scad			\
 	carriage.scad				\
+	crowned-idler.scad			\
 	eccentric-spacer.scad			\
-	jaws.scad
+	foot.scad				\
+	idler-spacer.scad			\
+	jaws.scad				\
+	joint.scad				\
+	top-corner.scad				\
+	tslotnut.scad
 STLFILES = $(SCADFILES:.scad=.stl)
 DEPFILES = $(addsuffix deps,$(SCADFILES))
 
