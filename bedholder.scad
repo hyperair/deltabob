@@ -26,6 +26,6 @@ difference () {
         mcad_polyhole (d = 5.3, h = 1000, center = true);
 
         translate ([0, 0, base_thickness])
-        mcad_polyhole (d = 8.8, h = 1000);
+        mcad_polyhole (d = 9, h = 1000);
     }
 }
