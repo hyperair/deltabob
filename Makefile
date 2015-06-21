@@ -13,7 +13,9 @@ SCADFILES =					\
 	jaws.scad				\
 	joint.scad				\
 	top-corner.scad				\
-	tslotnut.scad
+	tslotnut.scad				\
+	groovemount-top.scad			\
+	groovemount-bottom.scad
 STLFILES = $(SCADFILES:.scad=.stl)
 DEPFILES = $(addsuffix deps,$(SCADFILES))
 
