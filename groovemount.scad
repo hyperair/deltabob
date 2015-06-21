@@ -117,9 +117,10 @@ module jhead_groove_slot ()
         mcad_polyhole (d = jhead_groove_d, h = 1000, center = true);
 
         // secondary lip
-        translate ([0, 0, arm_thickness - jhead_lip_h - jhead_groove_h])
+        translate ([0, 0, arm_thickness - jhead_groove_h])
         stretch ()
-        mcad_polyhole (d = jhead_lip_d, h = 2.7);
+        mirror (Z)
+        mcad_polyhole (d = jhead_lip_d, h = 1000);
     }
 }
 
