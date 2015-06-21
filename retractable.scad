@@ -32,8 +32,8 @@ probe_height = microswitch_hole_elevation + microswitch_hole_base_offset;
 probe_height2 = 25;
 probe_d = 3;
 
-retractable_height = 27;
-retractable_width = microswitch_width;
+retractable_height = 30;
+retractable_width = 15;
 retractable_depth = probe_d + wall_thickness * 2;
 
 foot_thickness = 3;
@@ -62,7 +62,7 @@ module foot ()
             mcad_polyhole (d = effector_screwhole_d, h = 1000);
         }
 
-        ccube ([10000, microswitch_width, 1000], center = Y);
+        ccube ([10000, retractable_width, 1000], center = Y);
     }
 }
 
@@ -118,7 +118,6 @@ module microswitch_screwholes ()
         cylinder (d = microswitch_hole_d, h = 1000, center = true);
 
         translate ([0, 0, -retractable_depth / 2 - epsilon])
-        rotate (90, Z)
         mcad_nut_hole (size = microswitch_screwsize);
     }
 }
@@ -140,7 +139,6 @@ module spring_screwhole ()
         cylinder (d = default_screwhole_d, h = 1000, center = true);
 
         translate ([0, 0, -retractable_depth / 2 - epsilon])
-        rotate (90, Z)
         mcad_nut_hole (size = default_screwsize);
     }
 }
@@ -148,7 +146,7 @@ module spring_screwhole ()
 module spring_hole ()
 {
     place_spring_screwhole ()
-    translate ([0, 0, default_screwhole_d / 2 + 2])
+    translate ([0, 0, default_screwhole_d / 2 + 4])
     rotate (90, Y)
     cylinder (d = spring_d, h = 1000, center = true);
 }
