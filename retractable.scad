@@ -1,4 +1,5 @@
 use <MCAD/array/along_curve.scad>
+use <MCAD/array/mirror.scad>
 use <MCAD/fasteners/nuts_and_bolts.scad>
 use <MCAD/shapes/cylinder.scad>
 use <MCAD/shapes/boxes.scad>
@@ -35,6 +36,7 @@ probe_d = 3;
 retractable_height = 30;
 retractable_width = 15;
 retractable_depth = probe_d + wall_thickness * 2;
+retractable_rounding_r = 1;
 
 foot_thickness = 3;
 grip_thickness = 2;
@@ -77,12 +79,11 @@ module retractable_body ()
     }
 
     difference () {
-        radius = 1;
-        translate ([radius, 0, retractable_height / 2])
+        translate ([retractable_rounding_r, 0, retractable_height / 2])
         mcad_rounded_box (
-            size = [retractable_depth + radius * 2,
+            size = [retractable_depth + retractable_rounding_r * 2,
                 retractable_width, retractable_height],
-            radius = radius,
+            radius = retractable_rounding_r,
             center = true,
             sidesonly = true
         );
@@ -151,6 +152,21 @@ module spring_hole ()
     cylinder (d = spring_d, h = 1000, center = true);
 }
 
+module struts ()
+{
+    mcad_mirror_duplicate (Y)
+    translate ([-retractable_depth / 2 + retractable_rounding_r,
+            retractable_width / 2, foot_thickness + grip_thickness])
+    intersection () {
+        rotate (90, X)
+        rotate (45, Z)
+        ccube ([10, 10, 1], center = X + Y);
+
+        mirror (X)
+        ccube ([100, 100, 100], center = Y);
+    }
+}
+
 module retractable ()
 {
     module place_body ()
@@ -169,6 +185,10 @@ module retractable ()
                     retractable_width,
                     foot_thickness + grip_thickness],
                 center = Y);
+
+            // reinforcement strut
+            place_body ()
+            struts ();
         }
 
         place_body () {
