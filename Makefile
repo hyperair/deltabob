@@ -15,7 +15,9 @@ SCADFILES =					\
 	top-corner.scad				\
 	tslotnut.scad				\
 	groovemount-top.scad			\
-	groovemount-bottom.scad
+	groovemount-bottom.scad			\
+	retractable.scad
+
 STLFILES = $(SCADFILES:.scad=.stl)
 DEPFILES = $(addsuffix deps,$(SCADFILES))
 
