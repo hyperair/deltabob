@@ -334,6 +334,7 @@ translate ([0, triangle_offset - centroid_offset, 0])
 actual_build_diameter = triangle_base_length / tan (60);
 rounded_build_diameter = floor (actual_build_diameter / 10) * 10;
 echo ("Build diameter: ", rounded_build_diameter);
+echo ("DELTA_SMOOTH_ROD_OFFSET", -(centroid_offset - triangle_offset + min_wall_thickness + tslot_thickness / 4));
 
 // plate
 %translate ([0, 0, tslot_width + 10])
