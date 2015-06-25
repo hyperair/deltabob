@@ -26,7 +26,7 @@ pcb_size = [102, 51, 2];
 round_r = 2;
 
 mounting_tab_od = mounting_screwsize + wall_thickness;
-
+mounting_screwhole_distance = 4;
 
 $fs = 0.4;
 $fa = 1;
@@ -41,7 +41,8 @@ module place_pcb_screwholes ()
 
 module place_mounting_screwholes ()
 {
-    for (x = [1, -1] * (pcb_size[0] / 2 + mounting_tab_od / 2 + 2))
+    for (x = [1, -1] * (pcb_size[0] / 2 + mounting_tab_od / 2 +
+            mounting_screwhole_distance))
     translate ([x, pcb_size[1] / 2 - mounting_tab_od / 2, 0])
     children ();
 }
