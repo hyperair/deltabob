@@ -1,5 +1,7 @@
 use <MCAD/shapes/2Dshapes.scad>
 use <MCAD/shapes/boxes.scad>
+use <MCAD/shapes/polyhole.scad>
+use <MCAD/array/along_curve.scad>
 use <utils.scad>
 
 include <MCAD/units/metric.scad>
@@ -12,15 +14,18 @@ foot_height = 5;
 foot_round_r = 2;
 
 foot_dimensions_2 = [40, 20];
+wire_hole_d = 3.5;
+wire_elevation = foot_height - wire_hole_d;
 
 module base_shape ()
 {
+    %cube (concat (foot_dimensions_2, [foot_round_r + foot_height]));
     difference () {
         mcad_rounded_box (
             concat (foot_dimensions_2, [foot_round_r + foot_height]),
             radius = 2);
 
-        translate ([0, 0, 5])
+        translate ([0, 0, foot_height])
         cube ([1000, 1000, 1000], center = X + Y);
     }
 }
@@ -63,7 +68,22 @@ module tslot_interface ()
         height = trapezoid_h);
 }
 
-base_shape ();
+module wire_hole ()
+{
+    translate (concat (foot_dimensions_2 / 2, [wire_elevation - epsilon]))
+    hull ()
+    mcad_linear_multiply (no = 2, axis = Y, separation = foot_dimensions_2[1])
+    mcad_polyhole (d = wire_hole_d, h = foot_height + epsilon * 2);
+}
 
-translate ([0, 0, 5 - epsilon])
-tslot_interface ();
+
+difference () {
+    union () {
+        base_shape ();
+
+        translate ([0, 0, foot_height - epsilon])
+        tslot_interface ();
+    }
+
+    wire_hole ();
+}
