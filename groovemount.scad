@@ -31,6 +31,8 @@ mounting_plate_screwsize = M3;
 mounting_plate_screwhole_d = mounting_plate_screwsize + 0.3;
 mounting_plate_screw_orbit_r = (mounting_plate_d + jhead_lip_d) / 4;
 
+nut_tolerance = 0.05;
+
 $fs = 0.4;
 $fa = 1;
 
@@ -78,7 +80,7 @@ module effector_nutholes ()
     translate ([0, 0, -epsilon])
     place_effector_screwholes ()
     rotate (90, Z)
-    mcad_nut_hole (size = effector_screwsize, tolerance = 0.1);
+    mcad_nut_hole (size = effector_screwsize, tolerance = nut_tolerance);
 }
 
 module place_mounting_plate_screwholes ()
@@ -98,7 +100,7 @@ module mounting_plate_nutholes ()
 {
     translate ([0, 0, -epsilon])
     place_mounting_plate_screwholes ()
-    mcad_nut_hole (size = mounting_plate_screwsize, tolerance = 0.1);
+    mcad_nut_hole (size = mounting_plate_screwsize, tolerance = nut_tolerance);
 
 }
 
