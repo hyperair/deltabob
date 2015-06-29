@@ -8,8 +8,8 @@ include <MCAD/units/metric.scad>
 use <utils.scad>
 
 min_wall_thickness = 5;
-wheel_separation_perpendicular = 40 + 20;
-wheel_separation_parallel = wheel_separation_perpendicular;
+wheel_separation_perpendicular = 40 + 18;
+wheel_separation_parallel = 60;
 
 spacer_eccentricity = 1;
 
@@ -20,7 +20,7 @@ carriage_width = (wheel_separation_perpendicular + eccentric_spacer_od / 2 +
     min_wall_thickness * 2);
 carriage_length = (wheel_separation_parallel + eccentric_spacer_od / 2 +
     min_wall_thickness * 2);
-carriage_base_thickness = 5;
+carriage_base_thickness = 8;
 
 belt_clamp_tooth_count = 12;
 belt_x_offset = 5.093;          // 16-tooth pulley
