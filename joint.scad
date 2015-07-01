@@ -1,6 +1,6 @@
 use <MCAD/shapes/polyhole.scad>
 
-h = 6.5;
+h = 6.9;
 r = h/2 / cos(30);
 
 module stumpy() {
