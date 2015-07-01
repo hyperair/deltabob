@@ -20,7 +20,7 @@ carriage_width = (wheel_separation_perpendicular + eccentric_spacer_od / 2 +
     min_wall_thickness * 2);
 carriage_length = (wheel_separation_parallel + eccentric_spacer_od / 2 +
     min_wall_thickness * 2);
-carriage_base_thickness = 8;
+carriage_base_thickness = 7;
 
 belt_clamp_tooth_count = 12;
 belt_x_offset = 5.093;          // 16-tooth pulley
