@@ -1,4 +1,6 @@
-h = 7;
+use <MCAD/shapes/polyhole.scad>
+
+h = 6.5;
 r = h/2 / cos(30);
 
 module stumpy() {
@@ -15,8 +17,8 @@ module middle() {
       translate([2, 0, 0]) stumpy();
       rotate([0, 0, 90]) stumpy();
     }
-    rotate([90, 0, 0]) cylinder(r=1.5, h=30, center=true, $fn=12);
-    rotate([0, 90, 0]) cylinder(r=1.5, h=30, center=true, $fn=12);
+    rotate([90, 0, 0]) mcad_polyhole (d=3.2, h=30, center=true);
+    rotate([0, 90, 0]) mcad_polyhole (d=3.2, h=30, center=true);
   }
 }
 
