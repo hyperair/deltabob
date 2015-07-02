@@ -17,8 +17,8 @@ module middle() {
       translate([2, 0, 0]) stumpy();
       rotate([0, 0, 90]) stumpy();
     }
-    rotate([90, 0, 0]) mcad_polyhole (d=3.2, h=30, center=true);
-    rotate([0, 90, 0]) mcad_polyhole (d=3.2, h=30, center=true);
+    rotate([90, 0, 0]) mcad_polyhole (d=3, h=30, center=true);
+    rotate([0, 90, 0]) mcad_polyhole (d=3, h=30, center=true);
   }
 }
 
