@@ -23,7 +23,7 @@ carriage_length = (wheel_separation_parallel + eccentric_spacer_od / 2 +
     min_wall_thickness * 2);
 carriage_base_thickness = 7;
 
-belt_clamp_tooth_count = 12;
+belt_clamp_tooth_count = 6;
 belt_x_offset = 5.093;          // 16-tooth pulley
 belt_width = 6;
 belt_thickness = 1.38;
@@ -32,7 +32,7 @@ belt_clamp_length = belt_clamp_tooth_count * 2;
 belt_clamp_height = belt_width + 10;
 belt_clamp_width = belt_thickness + 4 * 2;
 
-belt_y_offset = (belt_clamp_length - carriage_length) / 2;
+belt_y_offset = -(belt_clamp_length - carriage_length) / 2;
 
 belt_clearance = 0.1;
 
@@ -82,19 +82,35 @@ module gt2_belt_clamp ()
 {
     translate ([0, 0, -epsilon]) {
         difference () {
-            union () {
-                ccube (
-                    [belt_clamp_width, belt_clamp_length,
-                        belt_clamp_height + epsilon],
-                    center = [true, true, false]);
+            fillet_r = 5;
 
-                // side fillets
-                for (x = [1, -1])
-                mirror_if (x < 1, X)
-                translate ([belt_clamp_width / 2 - epsilon, 0, 0])
+            // maintain center position
+            translate ([0, -fillet_r / 2])
+            difference () {
+                ccube ([belt_clamp_width + fillet_r * 2,
+                        belt_clamp_length + fillet_r,
+                        belt_clamp_height + epsilon],
+                    center = X + Y);
+
+                // fillets
+                mcad_mirror_duplicate (X)
+                hull ()
+                mcad_linear_multiply (no = 2, separation = 100, axis = Z)
+                translate ([belt_clamp_width / 2 + fillet_r, 0, fillet_r])
                 rotate (90, X)
-                linear_extrude (height = belt_clamp_length, center = true)
-                rounded_fillet_shape (r = 5);
+                cylinder (r = fillet_r,
+                    h = belt_clamp_length + fillet_r + epsilon * 2,
+                    center = true);
+
+                hull ()
+                mcad_linear_multiply (no = 2, separation = 100, axis = Z)
+                translate ([0,
+                        -belt_clamp_length / 2 - fillet_r / 2,
+                        fillet_r])
+                rotate (90, Y)
+                cylinder (r = fillet_r,
+                    h = belt_clamp_width + fillet_r * 2 + epsilon * 2,
+                    center = true);
             }
 
             gt2_belt (tooth_count = belt_clamp_tooth_count + 2,
