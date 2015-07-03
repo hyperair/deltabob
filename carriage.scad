@@ -95,18 +95,6 @@ module gt2_belt_clamp ()
                 rotate (90, X)
                 linear_extrude (height = belt_clamp_length, center = true)
                 rounded_fillet_shape (r = 5);
-
-                // disabled buttress stiffener
-                *for (i = [1, -1])
-                mirror_if (i < 0, Y)
-                translate ([0, -belt_clamp_length / 2])
-                rotate (90, X)
-                linear_extrude (height = 2)
-                translate ([0, belt_clamp_height + epsilon])
-                mirror (Y)
-                trapezoid (bottom = belt_clamp_width,
-                    height = belt_clamp_height + epsilon,
-                    left_angle = -60, right_angle = -60);
             }
 
             gt2_belt (tooth_count = belt_clamp_tooth_count + 2,
