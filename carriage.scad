@@ -242,8 +242,7 @@ module carriage ()
     )
     gt2_belt_clamp ();
 
-    %for (i = [1, -1])
-    mirror_if (i < 0, X)
+    %mcad_mirror_duplicate (X)
     translate ([belt_x_offset, 0, carriage_base_thickness + 0.5])
     gt2_belt (carriage_length / 2, belt_width);
 
