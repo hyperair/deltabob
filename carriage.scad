@@ -40,7 +40,7 @@ rod_separation = 50;
 carriage_hinge_offset = 22;
 arm_thickness = 10;
 
-arms_y_offset = 10;
+arms_y_offset = 0;
 
 m3_nut_tolerance = 0.01;
 
