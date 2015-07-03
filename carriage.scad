@@ -1,4 +1,5 @@
 use <MCAD/array/along_curve.scad>
+use <MCAD/array/mirror.scad>
 use <MCAD/shapes/boxes.scad>
 use <MCAD/shapes/polyhole.scad>
 use <MCAD/shapes/2Dshapes.scad>
@@ -131,6 +132,7 @@ module gt2_belt_clamp ()
             rotate (90, Y)
             rotate (90, Z) {
                 translate ([0, 0, -belt_clamp_width / 2 - 1])
+
                 m3_nut_hole ();
                 mcad_polyhole (d = 3.3, h = belt_clamp_width + epsilon * 2,
                     center = true);
@@ -195,6 +197,7 @@ module parallel_joints (reinforced) {
             );
 
             // reinforcement
+            mcad_mirror_duplicate (Z)
             intersection () {
                 translate ([0, 18, arm_thickness / 2])
                 rotate (45, X)
