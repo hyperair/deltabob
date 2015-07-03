@@ -30,7 +30,7 @@ belt_thickness = 1.38;
 
 belt_clamp_length = belt_clamp_tooth_count * 2;
 belt_clamp_height = belt_width + 10;
-belt_clamp_width = belt_thickness + 3 * 2;
+belt_clamp_width = belt_thickness + 4 * 2;
 
 belt_y_offset = (belt_clamp_length - carriage_length) / 2;
 
