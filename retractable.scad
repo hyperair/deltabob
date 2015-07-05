@@ -29,11 +29,12 @@ microswitch_button_offset = 0;
 
 probe_nozzle_xy_offset = 50;
 probe_offset_from_edge = probe_nozzle_xy_offset - effector_od / 2;
-probe_height = microswitch_hole_elevation + microswitch_hole_base_offset;
+probe_height = microswitch_hole_elevation + microswitch_hole_base_offset - 1;
 probe_height2 = 25;
-probe_d = 3;
+probe_d = 1.5 / cos (30);
 
-retractable_height = 30;
+retractable_elevation = 0;
+retractable_height = 42;
 retractable_width = 15;
 retractable_depth = probe_d + wall_thickness * 2;
 retractable_rounding_r = 1;
@@ -56,7 +57,7 @@ module foot ()
                 h = foot_thickness + grip_thickness);
 
             translate ([0, 0, -epsilon])
-            mcad_tube (od = effector_od, id = effector_id,
+            mcad_tube (od = effector_od, id = effector_id - 0.3,
                 h = grip_thickness);
 
             // effector screwhole
@@ -156,13 +157,15 @@ module struts ()
 {
     mcad_mirror_duplicate (Y)
     translate ([-retractable_depth / 2 + retractable_rounding_r,
-            retractable_width / 2, foot_thickness + grip_thickness])
+            retractable_width / 2,
+            -retractable_elevation + retractable_height -
+            (foot_thickness + grip_thickness)])
     intersection () {
         rotate (90, X)
         rotate (45, Z)
-        ccube ([10, 10, 1], center = X + Y);
+        ccube ([15, 15, 1], center = X + Y);
 
-        mirror (X)
+        mirror (X + Z)
         ccube ([100, 100, 100], center = Y);
     }
 }
@@ -170,7 +173,9 @@ module struts ()
 module retractable ()
 {
     module place_body ()
-    translate ([probe_offset_from_edge, 0])
+    translate ([probe_offset_from_edge, 0,
+            retractable_elevation - retractable_height +
+            foot_thickness + grip_thickness])
     children ();
 
     difference () {
