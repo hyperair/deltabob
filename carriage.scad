@@ -228,29 +228,24 @@ module parallel_joints (reinforced) {
                 cube ([width, 20, arm_thickness], center = true);
 
                 rotate (90, Y)
-                cylinder (d = arm_thickness + 2, h=width, center = true);
+                cylinder (d = arm_thickness + 2, h = width, center = true);
             }
 
             // longer arms
-            ccube (
+            arm_extra_len = (carriage_hinge_offset - carriage_base_thickness +
+                epsilon);
+            rotate (90, X)
+            translate ([0, 0, -arm_extra_len])
+            filleted_cube (
                 [
                     width,
-                    carriage_hinge_offset - carriage_base_thickness + epsilon,
-                    arm_thickness
+                    arm_thickness,
+                    arm_extra_len
                 ],
-                center = X + Z
+                center = X + Y,
+                fillet_sides = [1, 3],
+                fillet_r = reinforced
             );
-
-            // reinforcement
-            mcad_mirror_duplicate (Z)
-            intersection () {
-                translate ([0, 18, arm_thickness / 2])
-                rotate (45, X)
-                cube ([width, reinforced, reinforced], center=true);
-
-                translate ([0, 0, 20])
-                cube ([width, 35, 40], center=true);
-            }
         }
 
         // screwholes
