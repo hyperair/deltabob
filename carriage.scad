@@ -23,16 +23,25 @@ carriage_length = (wheel_separation_parallel + eccentric_spacer_od / 2 +
     min_wall_thickness * 2);
 carriage_base_thickness = 7;
 
-belt_clamp_tooth_count = 6;
+belt_clamp_tooth_count = 8;
 belt_x_offset = 5.093;          // 16-tooth pulley
 belt_width = 6;
 belt_thickness = 1.38;
+belt_doubled_thickness = 2;
 
-belt_clamp_length = belt_clamp_tooth_count * 2;
-belt_clamp_height = belt_width + 10;
-belt_clamp_width = belt_thickness + 4 * 2;
+// static belt clamp dimensions
+belt_clamp1_length = belt_clamp_tooth_count * 2;
+belt_clamp1_height = belt_width + 10;
+belt_clamp1_width = belt_thickness + 4 * 2;
+belt_y_offset1 = -(belt_clamp1_length - carriage_length) / 2;
 
-belt_y_offset = -(belt_clamp_length - carriage_length) / 2;
+// adjustable belt clamp dimensions
+belt_clamp2_stator_length = 10;
+belt_clamp2_stator_height = belt_width + 7;
+belt_clamp2_stator_width = belt_thickness + 7 * 2;
+belt_clamp2_screw_distance = (belt_clamp2_stator_width +
+    belt_doubled_thickness) / 2;
+belt_y_offset2 = (belt_clamp2_stator_length - carriage_length) / 2;
 
 belt_clearance = 0.1;
 
@@ -43,6 +52,8 @@ arm_thickness = 10;
 arms_y_offset = 0;
 
 m3_nut_tolerance = 0.01;
+
+mode = "plate";
 
 $fs = 0.4;
 $fa = 1;
@@ -77,49 +88,25 @@ module m3_nut_hole (proj = -1)
     mcad_nut_hole (size = 3, proj = proj, tolerance = m3_nut_tolerance);
 }
 
-
-module gt2_belt_clamp ()
+module gt2_belt_clamp_static ()
 {
     translate ([0, 0, -epsilon]) {
         difference () {
-            fillet_r = 5;
-
             // maintain center position
-            translate ([0, -fillet_r / 2])
-            difference () {
-                ccube ([belt_clamp_width + fillet_r * 2,
-                        belt_clamp_length + fillet_r,
-                        belt_clamp_height + epsilon],
-                    center = X + Y);
-
-                // fillets
-                mcad_mirror_duplicate (X)
-                hull ()
-                mcad_linear_multiply (no = 2, separation = 100, axis = Z)
-                translate ([belt_clamp_width / 2 + fillet_r, 0, fillet_r])
-                rotate (90, X)
-                cylinder (r = fillet_r,
-                    h = belt_clamp_length + fillet_r + epsilon * 2,
-                    center = true);
-
-                hull ()
-                mcad_linear_multiply (no = 2, separation = 100, axis = Z)
-                translate ([0,
-                        -belt_clamp_length / 2 - fillet_r / 2,
-                        fillet_r])
-                rotate (90, Y)
-                cylinder (r = fillet_r,
-                    h = belt_clamp_width + fillet_r * 2 + epsilon * 2,
-                    center = true);
-            }
+            filleted_cube (
+                [belt_clamp1_width, belt_clamp1_length, belt_clamp1_height],
+                center = X + Y,
+                fillet_sides = [0, 2, 3],
+                fillet_r = 5
+            );
 
             gt2_belt (tooth_count = belt_clamp_tooth_count + 2,
-                width = belt_clamp_height + 1);
+                width = belt_clamp1_height + 1);
 
             // chamfered entrance for easier installation
-            translate ([0, 0, belt_clamp_height + epsilon * 2])
+            translate ([0, 0, belt_clamp1_height + epsilon * 2])
             rotate (90, X)
-            linear_extrude (height = belt_clamp_length + epsilon * 2,
+            linear_extrude (height = belt_clamp1_length + epsilon * 2,
                 center = true)
             polygon ([
                     [-2, 0],
@@ -131,17 +118,71 @@ module gt2_belt_clamp ()
             translate ([
                     0,
                     0,
-                    belt_clamp_height - 3 / 2 - 2
+                    belt_clamp1_height - 3 / 2 - 2
                 ])
             rotate (90, Y)
             rotate (90, Z) {
-                translate ([0, 0, -belt_clamp_width / 2 - 1])
+                translate ([0, 0, -belt_clamp1_width / 2 - 1])
 
                 m3_nut_hole ();
-                mcad_polyhole (d = 3.3, h = belt_clamp_width + epsilon * 2,
+                mcad_polyhole (d = 3.3, h = belt_clamp1_width + epsilon * 2,
                     center = true);
             }
         }
+    }
+}
+
+module gt2_belt_clamp_adjustable_stator ()
+{
+    difference () {
+        filleted_cube (
+            [
+                belt_clamp2_stator_width,
+                belt_clamp2_stator_length,
+                belt_clamp2_stator_height
+            ],
+            center = X + Y,
+            fillet_sides = [0, 1, 2],
+            fillet_r = 5
+        );
+
+
+        // screwholes
+        for (x = [1, -1] * belt_clamp2_screw_distance / 2)
+        translate ([x, 0, belt_clamp2_stator_height / 2])
+        rotate (-90, X) {
+            mcad_polyhole (d = 3.3, h = 1000, center = true);
+
+            nut_offset = (belt_clamp2_stator_length / 2 -
+                mcad_metric_nut_thickness (3));
+            translate ([0, 0, nut_offset])
+            stretch (Z, 2)
+            rotate (90, Z)
+            m3_nut_hole ();
+        }
+
+        // slot for belt to pass through
+        *ccube ([belt_thickness + 1, 1000, 1000], center = X + Y);
+    }
+}
+
+module gt2_belt_clamp_adjustable_movingpart ()
+{
+    difference () {
+        ccube ([belt_clamp2_stator_width, belt_clamp2_stator_height, 5],
+            center = X + Y);
+
+        // belt slot
+        mcad_rounded_box (
+            [belt_doubled_thickness, belt_clamp2_stator_height - 4, 1000],
+            radius = 1,
+            sidesonly = true,
+            center = true
+        );
+
+        for (x = [1, -1] * belt_clamp2_screw_distance / 2)
+        translate ([x, 0, 0])
+        mcad_polyhole (d = 3.3, h = 1000, center = true);
     }
 }
 
@@ -254,12 +295,26 @@ module carriage ()
     carriage_base ();
 
     translate (
-        [belt_x_offset, belt_y_offset, carriage_base_thickness - epsilon]
+        [belt_x_offset, belt_y_offset1, carriage_base_thickness - epsilon]
     )
-    gt2_belt_clamp ();
+    gt2_belt_clamp_static ();
+
+    translate ([
+            belt_x_offset,
+            belt_y_offset2,
+            carriage_base_thickness - epsilon
+        ]) {
+
+        gt2_belt_clamp_adjustable_stator ();
+
+        if (mode == "preview")
+        translate ([0, -20, belt_clamp2_stator_height / 2])
+        rotate (90, X)
+        gt2_belt_clamp_adjustable_movingpart ();
+    }
 
     %mcad_mirror_duplicate (X)
-    translate ([belt_x_offset, 0, carriage_base_thickness + 0.5])
+    translate ([belt_x_offset, 0, carriage_base_thickness + 3])
     gt2_belt (carriage_length / 2, belt_width);
 
     translate ([0, arms_y_offset, carriage_hinge_offset - epsilon])
@@ -269,3 +324,7 @@ module carriage ()
 }
 
 carriage ();
+
+if (mode == "plate")
+translate ([carriage_width, 0, 0])
+gt2_belt_clamp_adjustable_movingpart ();
