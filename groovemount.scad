@@ -35,7 +35,7 @@ cap_nut_size = M4;
 cap_thread_length = 10;
 cap_thread_d = 16;
 cap_thread_pitch = 2;
-cap_thread_clearance = 0.3;
+cap_thread_clearance = 0.9;
 cap_supported_length = 5;
 
 // don't modify
