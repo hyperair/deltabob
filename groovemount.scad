@@ -255,18 +255,18 @@ module top_plate_cap ()
             cylinder (d = od, h = cap_length);
 
             linear_extrude (height = cap_supported_length)
-            round (r = 1)
+            round (r = 2)
             difference () {
                 od2 = od + 10;
                 circumference = od2 * PI;
                 notch_d = 5;
-                notches = round (circumference / notch_d / 1.5);
+                notches = round (circumference / notch_d / 2);
 
                 circle (d = od2);
 
                 for (a = [0:360/notches:359.99])
                 rotate (a, Z)
-                translate ([od2 / 2, 0])
+                translate ([od2 / 2 + notch_d * .2, 0])
                 circle (d = notch_d);
             }
 
