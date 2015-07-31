@@ -10,16 +10,15 @@ $fs = 0.4;
 $fa = 1;
 
 tslot_interface_depth = 5;
-foot_height = 5;
+foot_height = 6;
 foot_round_r = 2;
 
 foot_dimensions_2 = [40, 20];
 wire_hole_d = 3.5;
-wire_elevation = foot_height - wire_hole_d;
+wire_hole_depth = wire_hole_d + 1;
 
 module base_shape ()
 {
-    %cube (concat (foot_dimensions_2, [foot_round_r + foot_height]));
     difference () {
         mcad_rounded_box (
             concat (foot_dimensions_2, [foot_round_r + foot_height]),
@@ -70,9 +69,8 @@ module tslot_interface ()
 
 module wire_hole ()
 {
-    translate (concat (foot_dimensions_2 / 2, [wire_elevation - epsilon]))
-    hull ()
-    mcad_linear_multiply (no = 2, axis = Y, separation = foot_dimensions_2[1])
+    translate (concat (foot_dimensions_2 / 2, [foot_height - wire_hole_depth]))
+    stretch (Y, foot_dimensions_2[1])
     mcad_polyhole (d = wire_hole_d, h = foot_height + epsilon * 2);
 }
 
