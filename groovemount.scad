@@ -274,7 +274,7 @@ module top_plate_cap ()
         }
 
         translate ([0, 0, cap_supported_length])
-        metric_thread (diameter = cap_thread_d - cap_thread_clearance,
+        metric_thread (diameter = cap_thread_d + cap_thread_clearance,
             pitch = cap_thread_pitch,
             length = cap_thread_length + epsilon,
             internal = true);
