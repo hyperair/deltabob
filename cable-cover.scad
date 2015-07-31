@@ -18,7 +18,7 @@ lip_thickness = 2.2;
 
 cover_width = 20;
 
-grip_r = 0.8;
+grip_r = 0.7;
 clearance = 0.3;
 
 $fs = 0.4;
