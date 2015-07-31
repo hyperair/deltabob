@@ -1,10 +1,11 @@
 include <MCAD/units/metric.scad>
 use <MCAD/fasteners/nuts_and_bolts.scad>
+use <MCAD/fasteners/threads.scad>
 use <MCAD/shapes/cylinder.scad>
 use <MCAD/shapes/2Dshapes.scad>
 use <MCAD/shapes/polyhole.scad>
 use <MCAD/array/along_curve.scad>
-use </home/hyperair/src/rostock/platform.scad>
+use <utils.scad>
 
 
 effector_od = 60;
@@ -23,7 +24,21 @@ jhead_lip_d = 16;
 jhead_groove_d = 12;
 jhead_groove_h = 5.4;
 
+bowden_tube_d = 4.5;
+use_ptc = false;
+
+// ptc settings
 bowden_connector_d = 12;
+
+// non-ptc settings
+cap_nut_size = M4;
+cap_thread_length = 10;
+cap_thread_d = 16;
+cap_thread_pitch = 2;
+cap_thread_clearance = 0.3;
+cap_supported_length = 5;
+
+cap_length = cap_thread_length + cap_supported_length - cap_thread_pitch;
 
 mounting_plate_d = jhead_lip_d + 19;
 mounting_plate_h = 5;
@@ -31,7 +46,7 @@ mounting_plate_screwsize = M3;
 mounting_plate_screwhole_d = mounting_plate_screwsize + 0.3;
 mounting_plate_screw_orbit_r = (mounting_plate_d + jhead_lip_d) / 4;
 
-nut_tolerance = 0.05;
+nut_tolerance = 0.01;
 
 $fs = 0.4;
 $fa = 1;
@@ -140,11 +155,10 @@ module slot_piece ()
     }
 }
 
-module top_plate ()
+module basic_top_plate ()
 {
     difference () {
-        mcad_tube (od = mounting_plate_d, id = bowden_connector_d,
-            h = mounting_plate_h);
+        cylinder (d = mounting_plate_d, h = mounting_plate_h);
 
         // reduce this size by 0.1 for interference fit
         translate ([0, 0, -epsilon - 0.1])
@@ -154,12 +168,133 @@ module top_plate ()
     }
 }
 
-%rotate (90, Z)
-translate ([0, 0, arm_thickness])
-platform ();
+module top_plate_ptc ()
+{
+    difference () {
+        basic_top_plate ();
 
-translate ([0, 0, arm_thickness])
-top_plate ();
+        // hole for ptc
+        translate ([0, 0, -epsilon])
+        mcad_polyhole (d = bowden_connector_d,
+            h = mounting_plate_h + epsilon * 2);
+    }
+}
+
+module top_plate_nut ()
+{
+    difference () {
+        union () {
+            basic_top_plate ();
+
+            relief = 1;
+            minor_d = cap_thread_d - cos (30) * cap_thread_pitch * 10 / 8;
+
+            translate ([0, 0, mounting_plate_h])
+            difference () {
+                metric_thread (
+                    diameter = cap_thread_d,
+                    pitch = cap_thread_pitch,
+                    length = cap_thread_length
+                );
+
+                // chamfered entrance
+                chamfer_depth = cap_thread_pitch;
+
+                translate ([0, 0, cap_thread_length - chamfer_depth])
+                difference () {
+                    ccube ([cap_thread_d, cap_thread_d, chamfer_depth * 2],
+                        center = X + Y);
+
+                    cylinder (d1 = cap_thread_d,
+                        d2 = cap_thread_d - chamfer_depth * 2,
+                        h = chamfer_depth);
+                }
+            }
+
+            // filleted base of thread
+            translate ([0, 0, mounting_plate_h])
+            filleted_cylinder (d = minor_d, h = relief,
+                fillet_r = cap_thread_pitch);
+        }
+
+        // bowden tube hole
+        translate ([0, 0, -epsilon])
+        mcad_polyhole (d = bowden_tube_d,
+            h = mounting_plate_h + cap_thread_length + epsilon * 2);
+
+        // m4 nut hole (allow to freely rotate so we can fine-tune tube level)
+        translate ([0, 0, mounting_plate_h + cap_thread_length + 0.1])
+        mirror (Z)
+        //mcad_nut_hole (size = cap_nut_size, tolerance = nut_tolerance);
+        mcad_polyhole (
+            d = mcad_metric_nut_ac_width (cap_nut_size) + nut_tolerance * 2,
+            h = mcad_metric_nut_thickness (cap_nut_size)
+        );
+    }
+}
+
+module top_plate ()
+{
+    if (use_ptc)
+    top_plate_ptc ();
+
+    else
+    top_plate_nut ();
+}
+
+module top_plate_cap ()
+{
+    wall_thickness = 2;
+
+    difference () {
+        union () {
+            od = cap_thread_d + wall_thickness * 2;
+
+            cylinder (d = od, h = cap_length);
+
+            linear_extrude (height = cap_supported_length)
+            round (r = 1)
+            difference () {
+                od2 = od + 10;
+                circumference = od2 * PI;
+                notch_d = 5;
+                notches = round (circumference / notch_d / 1.5);
+
+                circle (d = od2);
+
+                for (a = [0:360/notches:359.99])
+                rotate (a, Z)
+                translate ([od2 / 2, 0])
+                circle (d = notch_d);
+            }
+
+            // fillets
+            translate ([0, 0, cap_supported_length - epsilon])
+            filleted_cylinder (d = od, h = 1, fillet_r = 1);
+        }
+
+        translate ([0, 0, cap_supported_length])
+        metric_thread (diameter = cap_thread_d - cap_thread_clearance,
+            pitch = cap_thread_pitch,
+            length = cap_thread_length + epsilon,
+            internal = true);
+
+        // hole for bowden tube
+        translate ([0, 0, -epsilon])
+        mcad_polyhole (d = bowden_tube_d, h = 1000);
+    }
+}
+
+translate ([0, 0, arm_thickness]) {
+    top_plate ();
+
+    %translate (
+        [0, 0, mounting_plate_h + cap_thread_length + cap_supported_length])
+    mirror (Z)
+    !top_plate_cap ();
+
+}
 slot_piece ();
+
 
 epsilon = 0.015;
