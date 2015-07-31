@@ -38,6 +38,9 @@ cap_thread_pitch = 2;
 cap_thread_clearance = 0.3;
 cap_supported_length = 5;
 
+// don't modify
+cap_thread_minor_d = cap_thread_d - cos (30) * cap_thread_pitch * 10 / 8;
+
 cap_length = cap_thread_length + cap_supported_length - cap_thread_pitch;
 
 mounting_plate_d = jhead_lip_d + 19;
@@ -187,7 +190,6 @@ module top_plate_nut ()
             basic_top_plate ();
 
             relief = 1;
-            minor_d = cap_thread_d - cos (30) * cap_thread_pitch * 10 / 8;
 
             translate ([0, 0, mounting_plate_h])
             difference () {
@@ -213,7 +215,7 @@ module top_plate_nut ()
 
             // filleted base of thread
             translate ([0, 0, mounting_plate_h])
-            filleted_cylinder (d = minor_d, h = relief,
+            filleted_cylinder (d = cap_thread_minor_d, h = relief,
                 fillet_r = cap_thread_pitch);
         }
 
@@ -273,13 +275,22 @@ module top_plate_cap ()
             filleted_cylinder (d = od, h = 1, fillet_r = 1);
         }
 
+        // thread
         translate ([0, 0, cap_supported_length])
         metric_thread (diameter = cap_thread_d + cap_thread_clearance,
             pitch = cap_thread_pitch,
             length = cap_thread_length + epsilon,
             internal = true);
 
-        // hole for bowden tube
+        // chamfered entrance
+        chamfer_depth = cap_thread_pitch;
+        translate ([0, 0, cap_length + epsilon])
+        mirror (Z)
+        cylinder (d1 = cap_thread_minor_d + chamfer_depth * 2,
+            d2 = cap_thread_minor_d,
+            h = chamfer_depth);
+
+        // hole for bowden tubep
         translate ([0, 0, -epsilon])
         mcad_polyhole (d = bowden_tube_d, h = 1000);
     }
