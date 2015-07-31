@@ -1,4 +1,4 @@
-INKSCAPEDIR = /usr/share/inkscape/extensions/
+>INKSCAPEDIR = /usr/share/inkscape/extensions/
 DXF_OUTLINES = $(INKSCAPEDIR)/dxf_outlines.py
 OPENSCAD = openscad
 
@@ -16,6 +16,7 @@ SCADFILES =					\
 	tslotnut.scad				\
 	groovemount-top.scad			\
 	groovemount-bottom.scad			\
+	groovemount-cap.scad			\
 	retractable.scad			\
 	cable-cover.scad
 
