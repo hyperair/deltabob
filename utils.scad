@@ -76,3 +76,18 @@ module filleted_cube (size, center, fillet_sides, fillet_r)
         fillet_cutout (side);
     }
 }
+
+module filleted_cylinder (h, r, center, d, fillet_r)
+{
+    r = (r == undef) ? d / 2 : r;
+
+    translate (center ? [0, 0, -h /2] : [0, 0, 0])
+    rotate_extrude ()
+    difference () {
+        square ([r + fillet_r, h]);
+
+        stretch (Y, h)
+        translate ([fillet_r + r, fillet_r])
+        circle (r = fillet_r);
+    }
+}
