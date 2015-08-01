@@ -272,7 +272,7 @@ module top_plate_cap ()
 
             // fillets
             translate ([0, 0, cap_supported_length - epsilon])
-            filleted_cylinder (d = od, h = 1, fillet_r = 1);
+            filleted_cylinder (d = od, h = 2, fillet_r = 2);
         }
 
         // thread
