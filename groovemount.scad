@@ -225,7 +225,7 @@ module top_plate_nut ()
             h = mounting_plate_h + cap_thread_length + epsilon * 2);
 
         // m4 nut hole (allow to freely rotate so we can fine-tune tube level)
-        translate ([0, 0, mounting_plate_h + cap_thread_length + 0.1])
+        translate ([0, 0, mounting_plate_h + cap_thread_length + 0.6])
         mirror (Z)
         //mcad_nut_hole (size = cap_nut_size, tolerance = nut_tolerance);
         mcad_polyhole (
