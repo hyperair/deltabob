@@ -91,3 +91,10 @@ module filleted_cylinder (h, r, center, d, fillet_r)
         circle (r = fillet_r);
     }
 }
+
+module round (r)
+{
+    offset (r = r)
+    offset (r = -r)
+    children ();
+}
