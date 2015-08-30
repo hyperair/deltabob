@@ -9,6 +9,7 @@ hinge_ball_r = hinge_ball_d / 2;
 hinge_ball_depth = 0.4 * hinge_ball_d;
 hinge_chord_d = 2 * sqrt (pow (hinge_ball_r, 2) -
     pow ((hinge_ball_r - hinge_ball_depth), 2));
+hinge_cylinder_d = hinge_chord_d + 2;
 hinge_angle = 45;
 hinge_offset = 30;
 hinge_ball_elevation = 3;
@@ -29,38 +30,19 @@ module effector ()
 {
     module basic_shape ()
     {
-        quadrant_angle = (2 * atan (
-                hinge_separation / (2 * platform_hinge_offset)));
-        hinge_distance_from_center = sqrt (
-            pow (hinge_separation / 2, 2) +
-            pow (platform_hinge_offset, 2));
-
-        linear_extrude (height = platform_thickness)
-        difference () {
-            offset (r = 5)
-            offset (r = -5)
+        intersection () {
             hull ()
-            for (angle = [0:120:360]) {
-                rotate (angle, Z)
-                intersection () {
-                    pieSlice (size = hinge_distance_from_center,
-                        start_angle = -quadrant_angle / 2,
-                        end_angle = +quadrant_angle / 2);
+            place_hinges ()
+            hinge ();
 
-                    translate ([0, -hinge_separation])
-                    square ([platform_hinge_offset, hinge_separation * 2]);
-                }
-            }
-            circle (d = platform_ring_id);
-
-            place_screwholes ()
-            screwhole ();
+            ccube ([1000, 1000, platform_thickness], center = X + Y);
         }
     }
 
     module screwhole ()
     {
-        mcad_polyhole (d = hotend_mount_screw_d);
+        mcad_polyhole (d = hotend_mount_screw_d, h = platform_thickness * 2.5,
+            center = true);
     }
 
     module place_screwholes ()
@@ -71,13 +53,29 @@ module effector ()
         children ();
     }
 
-    basic_shape ();
+    difference () {
+        render ()
+        union () {
+            basic_shape ();
 
-    place_hinges ()
-    hinge ();
+            place_hinges ()
+            hinge ();
+        }
+
+        translate ([0, 0, hinge_ball_r + hinge_ball_elevation])
+        place_hinges ()
+        hinge_ball ();
+
+        // center hole
+        mcad_polyhole (d = platform_ring_id, h = platform_thickness * 2.5,
+            center = true);
+
+        place_screwholes ()
+        screwhole ();
+    }
 }
 
-module hinge ()
+module hinge (subtract_ball = false)
 {
     difference () {
         translate ([0, 0, hinge_ball_r + hinge_ball_elevation])
@@ -87,9 +85,10 @@ module hinge ()
 
             translate ([0, 0, - hinge_ball_r + hinge_ball_depth])
             mirror (Z)
-            cylinder (d = hinge_chord_d + 2, h = h);
+            cylinder (d = hinge_cylinder_d, h = h);
 
-            #sphere (d = hinge_ball_d);
+            if (subtract_ball)
+            hinge_ball ();
         }
 
         // cut off bottom
@@ -98,11 +97,22 @@ module hinge ()
     }
 }
 
-module place_hinges ()
+module hinge_ball ()
+{
+    #sphere (d = hinge_ball_d);
+}
+
+module place_hinge_pair ()
 {
     for (angle = [0:120:360])
     rotate (angle - 90, Z)
     translate ([0, hinge_offset])
+    children ();
+}
+
+module place_hinges ()
+{
+    place_hinge_pair ()
     for (x = [1, -1] * hinge_separation / 2)
     translate ([x, 0])
     children ();
