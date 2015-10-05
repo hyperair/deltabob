@@ -99,7 +99,7 @@ module hinge (subtract_ball = false)
 
 module hinge_ball ()
 {
-    #sphere (d = hinge_ball_d);
+    sphere (d = hinge_ball_d);
 }
 
 module place_hinge_pair ()
