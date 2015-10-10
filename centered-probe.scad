@@ -25,7 +25,7 @@ microswitch_screwsize = 2;
 microswitch_hole_d = microswitch_screwsize + 0.3;
 microswitch_button_offset = 0;
 
-foot_thickness = 3;
+foot_thickness = 2;
 grip_thickness = 4;
 
 probe_width = 15;
