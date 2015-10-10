@@ -23,7 +23,7 @@ microswitch_hole_base_offset = 5.2;
 microswitch_elevation = -1;
 microswitch_screwsize = 2;
 microswitch_hole_d = microswitch_screwsize + 0.3;
-microswitch_button_offset = 0;
+microswitch_button_offset = 7.2; // offset from center of switch
 
 foot_thickness = 2;
 grip_thickness = 4;
@@ -85,10 +85,11 @@ module probe_switch_holder ()
     translate ([0, 0, -probe_arm_length])
     mirror (Z)
     difference () {
-        translate ([-microswitch_width / 2, 0, 0])
+        translate ([microswitch_button_offset - microswitch_width / 2, 0, 0])
         ccube (
             size = [
-                probe_arm_xy_offset + probe_arm_thickness + microswitch_width / 2,
+                (probe_arm_xy_offset + probe_arm_thickness +
+                    microswitch_width / 2 - microswitch_button_offset),
                 probe_width,
                 probe_arm_thickness
             ],
@@ -96,6 +97,7 @@ module probe_switch_holder ()
         );
 
         // hole for sticking microswitch in
+        translate ([microswitch_button_offset, 0, 0])
         stretch (direction = Y, distance = 100)
         ccube (
             size = [
@@ -107,6 +109,7 @@ module probe_switch_holder ()
         );
 
         // microswitch mounting hole
+        translate ([microswitch_button_offset, 0, 0])
         mcad_mirror_duplicate (X)
         translate ([
                 microswitch_hole_separation / 2,
