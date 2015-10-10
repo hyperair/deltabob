@@ -29,7 +29,7 @@ foot_thickness = 3;
 grip_thickness = 4;
 
 probe_width = 15;
-probe_arm_length = 60;
+probe_arm_length = 80;
 probe_arm_thickness = 8;
 probe_arm_xy_offset = 60;
 
