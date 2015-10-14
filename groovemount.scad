@@ -302,7 +302,7 @@ translate ([0, 0, arm_thickness]) {
     %translate (
         [0, 0, mounting_plate_h + cap_thread_length + cap_supported_length])
     mirror (Z)
-    !top_plate_cap ();
+    top_plate_cap ();
 
 }
 slot_piece ();
