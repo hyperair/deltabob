@@ -5,7 +5,7 @@ use <MCAD/shapes/2Dshapes.scad>
 use <MCAD/shapes/polyhole.scad>
 use <utils.scad>
 
-wall_thickness = 3;
+wall_thickness = 1.8;
 default_screwsize = M3;
 default_screwhole_d = default_screwsize + 0.3;
 
@@ -39,6 +39,7 @@ $fa = 1;
 module probe_foot ()
 {
     // translate ([-effector_od / 2, 0, 0])
+    render ()
     difference () {
         translate ([0, 0, -grip_thickness])
         ccube (
