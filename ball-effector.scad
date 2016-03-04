@@ -11,7 +11,7 @@ hinge_chord_d = 2 * sqrt (pow (hinge_ball_r, 2) -
     pow ((hinge_ball_r - hinge_ball_depth), 2));
 hinge_cylinder_d = hinge_chord_d + 2;
 hinge_angle = 45;
-hinge_offset = 30;
+hinge_offset = 32;
 hinge_ball_elevation = 3;
 
 platform_thickness = 8;
