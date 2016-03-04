@@ -23,8 +23,10 @@ hotend_mount_screw_d = 4;
 hotend_screws = 6;
 clearance = 0.3;
 
+string_hole_d = 2;
+
 $fs = 0.4;
-$fa = 1;
+$fa = 15;
 
 module effector ()
 {
@@ -72,6 +74,10 @@ module effector ()
 
         place_screwholes ()
         screwhole ();
+
+        place_hinge_pair ()
+            translate ([0, 0, hinge_ball_r + hinge_ball_elevation])
+            mcad_polyhole (d = string_hole_d, h = 1000, center = true);
     }
 }
 
