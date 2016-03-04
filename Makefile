@@ -4,6 +4,8 @@ OPENSCAD = openscad
 
 SCADFILES =					\
 	bedholder.scad				\
+	ball-end.scad				\
+	ball-effector.scad			\
 	bottom-corner.scad			\
 	carriage.scad				\
 	crowned-idler.scad			\
