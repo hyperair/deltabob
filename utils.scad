@@ -98,3 +98,25 @@ module round (r)
     offset (r = -r)
     children ();
 }
+
+function slice (list, start = 0, length) = (
+    (length <= 0) ? [] : [
+        for (i = [start : max (0, min (len (list), start + length) - 1)])
+            list[i]
+    ]);
+
+module stacked_cylinder (sizes)
+{
+    echo (sizes);
+
+    if (len (sizes) > 0) {
+        size = sizes[len (sizes) - 1];
+        d = size[0];
+        h = size[1];
+
+        cylinder (d = d, h = h);
+
+        translate ([0, 0, h])
+        stacked_cylinder (slice (sizes, length = len (sizes) - 1));
+    }
+}
