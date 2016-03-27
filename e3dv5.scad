@@ -95,6 +95,3 @@ module e3dv5 ()
 
     e3dv6_nozzle ();
 }
-
-
-e3dv5 ();
