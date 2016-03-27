@@ -107,8 +107,6 @@ function slice (list, start = 0, length) = (
 
 module stacked_cylinder (sizes)
 {
-    echo (sizes);
-
     if (len (sizes) > 0) {
         size = sizes[len (sizes) - 1];
         d = size[0];
