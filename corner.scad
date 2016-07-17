@@ -9,35 +9,29 @@ include <configuration/resolution.scad>
 
 use <utils.scad>
 
-module corner_shape ()
+module corner_shape (corner_options)
 {
-    h_profile = extrusions_h_profile;
-    v_profile = extrusions_v_profile;
+    h_aluex = corner_get_h_aluex (corner_options);
+    v_aluex = corner_get_v_aluex (corner_options);
+    wall_thickness = corner_get_wall_thickness (corner_options);
+
+    h_profile = aluex_get_profile (h_aluex);
+    v_profile = aluex_get_profile (v_aluex);
 
     median_line_length = (
-        (h_profile[0] / cos(30) + corner_wall_thickness) * 2 +
+        (h_profile[0] / cos(30) + wall_thickness) * 2 +
         v_profile[0]
     );
 
-    median_radial_length_to_edge = v_profile[1] + corner_wall_thickness;
-
-    trapezoid_base = _corner_find_trapezoid_base (median_line_length,
-                                                  -median_radial_length_to_edge);
-    trapezoid_h = (
-        corner_wall_thickness +
-        v_profile[1] +
-        corner_wall_thickness +
-        corner_cavity_axial_length +
-        corner_wall_thickness
-    );
+    median_radial_length_to_edge = v_profile[1] + wall_thickness;
 
     /* list of trapezoid y coords */
-    y0 = -(v_profile[1] + corner_wall_thickness);  // outer surface
+    y0 = -(v_profile[1] + wall_thickness);  // outer surface
     y1 = -v_profile[1];                            // outer surface of v profile
     y2 = 0;                     // median line; aka inner surface of v profile
-    y3 = corner_wall_thickness; // outer surface of trapezoidal cavity
+    y3 = wall_thickness; // outer surface of trapezoidal cavity
     y4 = y3 + corner_cavity_axial_length;
-    y5 = y4 + corner_wall_thickness;
+    y5 = y4 + wall_thickness;
 
     difference () {
         round (20)
@@ -58,7 +52,7 @@ module corner_shape ()
 
         /* h extrusions */
         mcad_mirror_duplicate ()
-        translate ([v_profile[0] / 2 + corner_wall_thickness, 0])
+        translate ([v_profile[0] / 2 + wall_thickness, 0])
         rotate (-30)
         square ([h_profile[0] + epsilon, (y5 - y0) * 2]);
 
@@ -88,20 +82,40 @@ module corner_shape ()
         /* crop the size of the arms */
         mcad_mirror_duplicate ()
         translate ([(v_profile[0] / 2 +
-                     corner_wall_thickness -
+                     wall_thickness -
                      corner_diagonal_wall_thickness -
                      epsilon),
                     0])
         rotate (-30)
         translate ([0, corner_arm_length])
-        square ([corner_wall_thickness + h_profile[0] + epsilon * 2, 1000]);
+        square ([wall_thickness + h_profile[0] + epsilon * 2, 1000]);
     }
 }
 
-module corner_bottom ()
+module corner_blank (corner_blank_options)
 {
-    linear_extrude (height = corner_bottom_height)
-    corner_shape ();
+    height = corner_blank_get_height (corner_blank_options);
+
+    linear_extrude (height = height)
+    corner_shape (corner_blank_options);
+
+    /* h slot interface */
+    h_extrusion = corner_blank_get_hextrusion (corner_blank_options);
+    h_slot = aluex_slot_profile (h_extrusion);
+
+    linear_extrude (height = corner_arm_length)
+    aluex_slot_shape (h_slot);
+
+    /* place v slot interface */
+
+    /* screwholes */
+}
+
+module corner_bottom (corner_bottom_options)
+{
+    corner_blank (corner_bottom_get_blank (corner_bottom_options));
+
+    /* motor holes */
 }
 
 corner_bottom ();
