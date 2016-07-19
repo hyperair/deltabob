@@ -15,7 +15,6 @@ function _corner_find_trapezoid_height (top, bottom) = (
     (bottom - top) / 2 * tan(60)
 );
 
-
 corner_hext_corner_distance = (
     extrusions_v_profile[0] + 2 *
     corner_wall_thickness
