@@ -153,11 +153,11 @@ module corner_shape (corner_options)
         mcad_mirror_duplicate ()
         translate ([(v_profile[0] / 2 +
                      wall_thickness -
-                     corner_get_diagonal_wall_thickness (corner_options) -
                      epsilon),
                     0])
         rotate (-30)
-        translate ([0, corner_get_arm_length (corner_options)])
+        translate ([-corner_get_diagonal_wall_thickness (corner_options),
+                    corner_get_arm_length (corner_options)])
         square ([wall_thickness + h_profile[0] + epsilon * 2, 1000]);
     }
 }
@@ -188,7 +188,7 @@ module corner_blank (corner_blank_options)
     mcad_mirror_duplicate (X)
     for (h_aluex_pos = h_aluex_positions)
         translate ([0, 0, h_aluex_pos])
-        translate ([v_circumferential / 2 + wall_thickness, 0])
+        translate ([(v_circumferential / 2 + wall_thickness - epsilon), 0])
         rotate (-30, Z)
         rotate (90, Z)
         translate ([0, -corner_get_h_aluex_width (corner_blank_options) / 2])
