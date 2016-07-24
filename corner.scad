@@ -1,10 +1,9 @@
 use <MCAD/array/mirror.scad>
 use <MCAD/shapes/2Dshapes.scad>
+use <MCAD/shapes/polyhole.scad>
 include <MCAD/units/metric.scad>
 
-/* include <configuration/corner.scad> */
 include <configuration/delta.scad>
-/* include <configuration/extrusions.scad> */
 include <configuration/resolution.scad>
 
 use <utils.scad>
@@ -24,8 +23,11 @@ module slot_interface_shape (type, h)
         square (size = [5, 1.75], center = true);
 }
 
-module place_slots (slots, size, sides)
+module place_slots (aluex, sides)
 {
+    size = aluex_size (aluex);
+    slots = aluex_slots (aluex);
+
     xlen = size[1];
     ylen = size[0];
 
@@ -71,12 +73,62 @@ module place_slots (slots, size, sides)
 module aluex_slot_interface (aluex, h, slot_sides = "udlr")
 {
     place_slots (
-        slots = aluex_slots (aluex),
-        size = aluex_size (aluex),
+        aluex = aluex,
         sides = slot_sides
     )
     slot_interface_shape (type = aluex_slot_profile (aluex),
                           h = h);
+}
+
+/**
+ * Places children where the v aluex is on the corner. Only translates on the XY
+ * plane. v aluex is expected to be centered.
+ */
+module corner_place_v_aluex (corner_blank)
+{
+    translate ([0, -corner_get_v_aluex_radial (corner_blank) / 2])
+    children ();
+}
+
+/**
+ * Places children where the v aluex is on the corner. Only translates on the XY
+ * plane. v aluex is expected to be centered.
+ */
+module corner_place_h_aluex_xy (corner_blank)
+{
+    v_circumferential = corner_get_v_aluex_circumferential (corner_blank);
+    wall_thickness = corner_get_wall_thickness (corner_blank);
+
+    mcad_mirror_duplicate (X)
+    translate ([v_circumferential / 2 + wall_thickness, 0])
+    rotate (-30)
+    children ();
+}
+
+module aluex_screwhole (h)
+{
+    translate ([0, 0, -epsilon])
+    mcad_polyhole (d = 5.3, h = h);
+}
+
+module corner_place_h_aluex (corner_blank)
+{
+    height = corner_get_height (corner_blank);
+    h_height = corner_get_h_aluex_height (corner_blank);
+    num = corner_get_h_aluex_num (corner_blank);
+    separation = corner_get_h_aluex_separation (corner_blank);
+    h_aluex_positions = [
+        for (i = [0:num-1])
+            h_height / 2 + (separation + h_height) * i
+    ];
+
+    for (h_aluex_pos = h_aluex_positions)
+        translate ([0, 0, h_aluex_pos])
+        corner_place_h_aluex_xy (corner_blank)
+        rotate (90, Z)
+        translate ([0, -corner_get_h_aluex_width (corner_blank) / 2])
+        rotate (90, Y)
+        children ();
 }
 
 module corner_shape (corner_options)
@@ -117,13 +169,11 @@ module corner_shape (corner_options)
         );
 
         /* v extrusion */
-        translate ([0, -v_profile[1] / 2])
+        corner_place_v_aluex (corner_options)
         square (v_profile, center = true);
 
         /* h extrusions */
-        mcad_mirror_duplicate ()
-        translate ([v_profile[0] / 2 + wall_thickness, 0])
-        rotate (-30)
+        corner_place_h_aluex_xy (corner_options)
         square ([h_profile[0] + epsilon, (y5 - y0) * 2]);
 
         /* cavity */
@@ -165,42 +215,67 @@ module corner_shape (corner_options)
 module corner_blank (corner_blank_options)
 {
     height = corner_get_height (corner_blank_options);
+
     v_circumferential = corner_get_v_aluex_circumferential (
         corner_blank_options
     );
+    v_radial = corner_get_v_aluex_radial (
+        corner_blank_options
+    );
+
+
     wall_thickness = corner_get_wall_thickness (corner_blank_options);
 
+    h_width = corner_get_h_aluex_width (corner_blank_options);
     h_height = corner_get_h_aluex_height (corner_blank_options);
-    h_aluex_positions = [
-        h_height / 2,
-        height - h_height / 2
-    ];
 
-    /* basic corner shape */
-    linear_extrude (height = height)
-    corner_shape (corner_blank_options);
+    render ()
+    difference () {
+        union () {
+            /* basic corner shape */
+            linear_extrude (height = height)
+            corner_shape (corner_blank_options);
 
-    /* v slot interface */
-    translate ([0, -corner_get_v_aluex_radial (corner_blank_options) / 2])
-    aluex_slot_interface (corner_get_v_aluex (corner_blank_options), height);
+            /* v slot interface */
+            corner_place_v_aluex (corner_blank_options)
+            aluex_slot_interface (corner_get_v_aluex (corner_blank_options),
+                                  height);
 
-    /* h slot interface */
-    mcad_mirror_duplicate (X)
-    for (h_aluex_pos = h_aluex_positions)
-        translate ([0, 0, h_aluex_pos])
-        translate ([(v_circumferential / 2 + wall_thickness - epsilon), 0])
-        rotate (-30, Z)
-        rotate (90, Z)
-        translate ([0, -corner_get_h_aluex_width (corner_blank_options) / 2])
-        rotate (90, Y)
-        translate ([0, 0, -epsilon])
-        aluex_slot_interface (
-            aluex = corner_get_h_aluex (corner_blank_options),
-            h = corner_get_arm_length (corner_blank_options),
-            slot_sides = "u"
-        );
+            /* h slot interface */
+            corner_place_h_aluex (corner_blank_options)
+            translate ([0, 0, -epsilon])
+            aluex_slot_interface (
+                aluex = corner_get_h_aluex (corner_blank_options),
+                h = corner_get_arm_length (corner_blank_options),
+                slot_sides = "u"
+            );
+        }
 
-    /* screwholes */
+        /* v screwholes */
+        corner_place_v_aluex (corner_blank_options)
+        for (pos = corner_get_v_aluex_screwholes (corner_blank_options))
+            translate ([0, 0, pos])
+            place_slots (
+                aluex = corner_get_v_aluex (corner_blank_options),
+                sides = "ud"
+            )
+            rotate (90, X)
+            translate ([0, 0, -wall_thickness - epsilon])
+            aluex_screwhole (v_radial / 2 + wall_thickness);
+
+        /* h screwholes */
+        corner_place_h_aluex (corner_blank_options)
+        for (pos = corner_get_h_aluex_screwholes (corner_blank_options))
+            translate ([0, 0, pos])
+
+            place_slots (
+                aluex = corner_get_h_aluex (corner_blank_options),
+                sides = "u"
+            )
+            rotate (90, X)
+            translate ([0, 0, -wall_thickness - epsilon])
+            aluex_screwhole (h_width / 2 + wall_thickness);
+    }
 }
 
 module corner_bottom (corner_bottom_options)
@@ -210,4 +285,9 @@ module corner_bottom (corner_bottom_options)
     /* motor holes */
 }
 
-corner_bottom (delta_get_bottom_corner (deltabob));
+module corner_top (corner_top_options)
+{
+    corner_blank (corner_top_get_blank (corner_top_options));
+}
+
+corner_top (delta_get_top_corner (deltabob));

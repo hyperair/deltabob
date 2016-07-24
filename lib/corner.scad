@@ -9,6 +9,9 @@ function CornerBlank (
     h_aluex_num,
     h_aluex_separation,
 
+    v_screwhole_positions,
+    h_screwholes_positions,
+
     wall_thickness,
     cavity_width,
     arm_length,
@@ -20,6 +23,9 @@ function CornerBlank (
     ["h_aluex", h_aluex],
     ["h_aluex_num", h_aluex_num],
     ["h_aluex_separation", h_aluex_separation],
+
+    ["v_aluex_screwholes", v_aluex_screwholes],
+    ["h_aluex_screwholes", h_aluex_screwholes],
 
     ["wall_thickness", wall_thickness],
     ["cavity_width", cavity_width],
@@ -36,6 +42,16 @@ function corner_get_v_aluex_orientation (c) =
 function corner_get_h_aluex (c) = dict_get (c, "h_aluex");
 function corner_get_h_aluex_num (c) = dict_get (c, "h_aluex_num");
 function corner_get_h_aluex_separation (c) = dict_get (c, "h_aluex_separation");
+
+function corner_get_v_aluex_screwholes (c) =
+(
+    dict_get (c, "v_aluex_screwholes")
+);
+
+function corner_get_h_aluex_screwholes (c) =
+(
+    dict_get (c, "h_aluex_screwholes")
+);
 
 function corner_get_wall_thickness (c) = dict_get (c, "wall_thickness");
 function corner_get_cavity_width (c) = dict_get (c, "cavity_width");
@@ -126,9 +142,14 @@ function CornerBottom (v_aluex,
 [
     ["corner_blank", CornerBlank (v_aluex = v_aluex,
                                   v_aluex_orientation = v_aluex_orientation,
+
                                   h_aluex = h_aluex,
                                   h_aluex_num = h_aluex_num,
                                   h_aluex_separation = h_aluex_separation,
+
+                                  v_aluex_screwholes = v_aluex_screwholes,
+                                  h_aluex_screwholes = h_aluex_screwholes,
+
                                   wall_thickness = wall_thickness,
                                   cavity_width = cavity_width,
                                   arm_length = arm_length)]
@@ -149,12 +170,17 @@ function CornerTop (v_aluex,
 [
     ["corner_blank", CornerBlank (v_aluex = v_aluex,
                                   v_aluex_orientation = v_aluex_orientation,
+
                                   h_aluex = h_aluex,
                                   h_aluex_num = h_aluex_num,
                                   h_aluex_separation = h_aluex_separation,
+
+                                  v_aluex_screwholes = v_aluex_screwholes,
+                                  h_aluex_screwholes = h_aluex_screwholes,
+
                                   wall_thickness = wall_thickness,
                                   cavity_width = cavity_width,
                                   arm_length = arm_length)]
 ];
 
-function corner_top_get_blank (c) = dict_get (c, "corner_bblank");
+function corner_top_get_blank (c) = dict_get (c, "corner_blank");
