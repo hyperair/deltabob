@@ -138,7 +138,9 @@ function CornerBottom (v_aluex,
 
                        wall_thickness,
                        cavity_width,
-                       arm_length) =
+                       arm_length,
+
+                       motor) =
 [
     ["corner_blank", CornerBlank (v_aluex = v_aluex,
                                   v_aluex_orientation = v_aluex_orientation,
@@ -152,10 +154,12 @@ function CornerBottom (v_aluex,
 
                                   wall_thickness = wall_thickness,
                                   cavity_width = cavity_width,
-                                  arm_length = arm_length)]
+                                  arm_length = arm_length)],
+    ["motor", motor]
 ];
 
 function corner_bottom_get_blank (c) = dict_get (c, "corner_blank");
+function corner_bottom_get_motor (c) = dict_get (c, "motor");
 
 function CornerTop (v_aluex,
                     v_aluex_orientation,

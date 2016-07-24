@@ -1,3 +1,5 @@
+include <MCAD/motors/stepper.scad>
+
 use <../lib/aluex.scad>
 use <../lib/corner.scad>
 use <../lib/delta.scad>
@@ -31,7 +33,8 @@ deltabob = (
 
             wall_thickness = wall_thickness,
             cavity_width = corner_cavity_width,
-            arm_length = arm_length
+            arm_length = arm_length,
+            motor = Nema17
         ),
 
         corner_top = CornerTop (
