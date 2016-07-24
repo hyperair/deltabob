@@ -77,8 +77,7 @@ module aluex_slot_interface (aluex, h, slot_sides = "udlr")
         aluex = aluex,
         sides = slot_sides
     )
-    slot_interface_shape (type = aluex_slot_profile (aluex),
-                          h = h);
+    slot_interface_shape (type = aluex_slot_profile (aluex), h = h);
 }
 
 /**
@@ -87,7 +86,11 @@ module aluex_slot_interface (aluex, h, slot_sides = "udlr")
  */
 module corner_place_v_aluex (corner_blank)
 {
+    orientation = corner_get_v_aluex_orientation (corner_blank);
+    rotation = (orientation == "radial") ? 90 : 0;
+
     translate ([0, -corner_get_v_aluex_radial (corner_blank) / 2])
+    rotate (rotation, Z)
     children ();
 }
 
@@ -106,10 +109,23 @@ module corner_place_h_aluex_xy (corner_blank)
     children ();
 }
 
-module aluex_screwhole (h)
+module aluex_screwhole (aluex, h, h_capscrew)
 {
-    translate ([0, 0, -epsilon])
-    mcad_polyhole (d = 5.3, h = h);
+    h_below = aluex_size (aluex)[0] / 2;
+
+    /* aluex is at Z<0 */
+    /* actual hole */
+    translate ([0, 0, -h_below - epsilon])
+    mcad_polyhole (d = 5.3, h = h + h_below + epsilon);
+
+    /* capscrew head */
+    if (h_capscrew)
+        translate ([0, 0, h])
+        mcad_polyhole (d = 8.8, h = h_capscrew);
+
+    /* relief for tnut */
+    mirror (Z)
+    ccube ([20, 15, 5], center = X + Y);
 }
 
 module corner_place_h_aluex (corner_blank)
@@ -136,21 +152,22 @@ module corner_shape (corner_options)
 {
     h_aluex = corner_get_h_aluex (corner_options);
     v_aluex = corner_get_v_aluex (corner_options);
+    v_size = aluex_size (v_aluex);
+
     wall_thickness = corner_get_wall_thickness (corner_options);
 
     h_profile = aluex_size (h_aluex);
-    v_profile = [
-        corner_get_v_aluex_circumferential (corner_options),
-        corner_get_v_aluex_radial (corner_options)
-    ];
+    v_profile = [v_size[1], v_size[0]];
+    v_radial = corner_get_v_aluex_radial (corner_options);
+    v_circumferential = corner_get_v_aluex_circumferential (corner_options);
 
     median_line_length = corner_get_median_line_length (corner_options);
     cavity_width = corner_get_cavity_width (corner_options);
     cavity_trapezoid_top = corner_get_cavity_trapezoid_top (corner_options);
 
     /* list of trapezoid y coords */
-    y0 = -(v_profile[1] + wall_thickness);  // outer surface
-    y1 = -v_profile[1];                            // outer surface of v profile
+    y0 = -(v_radial + wall_thickness);  // outer surface
+    y1 = -v_radial;                            // outer surface of v profile
     y2 = 0;                     // median line; aka inner surface of v profile
     y3 = wall_thickness; // outer surface of trapezoidal cavity
     y4 = y3 + cavity_width;
@@ -202,10 +219,7 @@ module corner_shape (corner_options)
 
         /* crop the size of the arms */
         mcad_mirror_duplicate ()
-        translate ([(v_profile[0] / 2 +
-                     wall_thickness -
-                     epsilon),
-                    0])
+        translate ([(v_circumferential / 2 + wall_thickness - epsilon), 0])
         rotate (-30)
         translate ([-corner_get_diagonal_wall_thickness (corner_options),
                     corner_get_arm_length (corner_options)])
@@ -215,6 +229,8 @@ module corner_shape (corner_options)
 
 module corner_blank (corner_blank_options)
 {
+    h_aluex = corner_get_h_aluex (corner_blank_options);
+    v_aluex = corner_get_v_aluex (corner_blank_options);
     height = corner_get_height (corner_blank_options);
 
     v_circumferential = corner_get_v_aluex_circumferential (
@@ -261,8 +277,7 @@ module corner_blank (corner_blank_options)
                 sides = "ud"
             )
             rotate (90, X)
-            translate ([0, 0, -wall_thickness - epsilon])
-            aluex_screwhole (v_radial / 2 + wall_thickness);
+            aluex_screwhole (v_aluex, wall_thickness, 30);
 
         /* h screwholes */
         corner_place_h_aluex (corner_blank_options)
@@ -274,8 +289,7 @@ module corner_blank (corner_blank_options)
                 sides = "u"
             )
             rotate (90, X)
-            translate ([0, 0, -wall_thickness - epsilon])
-            aluex_screwhole (h_width / 2 + wall_thickness);
+            aluex_screwhole (h_aluex, wall_thickness + epsilon);
     }
 }
 
