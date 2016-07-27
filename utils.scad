@@ -1,3 +1,5 @@
+use <MCAD/shapes/2Dshapes.scad>
+
 include <MCAD/units/metric.scad>
 
 module mirror_if (value, axis = X)
@@ -77,18 +79,45 @@ module filleted_cube (size, center, fillet_sides, fillet_r)
     }
 }
 
-module filleted_cylinder (h, r, center, d, fillet_r)
+module filleted_cylinder (
+    h, r, center, d, d1, d2, r1, r2,
+    fillet_r = 0, chamfer_r = 0
+)
 {
     r = (r == undef) ? d / 2 : r;
 
-    translate (center ? [0, 0, -h /2] : [0, 0, 0])
-    rotate_extrude ()
-    difference () {
-        square ([r + fillet_r, h]);
+    function get_r (_r, _d) =
+    (
+        (r != undef) ? r :
+        (_r != undef) ? _r :
+        _d / 2
+    );
 
-        stretch (Y, h)
-        translate ([fillet_r + r, fillet_r])
-        circle (r = fillet_r);
+    r1 = get_r (r1, d1);
+    r2 = get_r (r2, d2);
+
+    d1 = r1 * 2;
+    d2 = r2 * 2;
+
+    translate (center ? [0, 0, -h /2] : [0, 0, 0])
+    rotate_extrude () {
+        intersection () {
+            round (chamfer_r)
+            round (-fillet_r)
+            union () {
+                intersection () {
+                    trapezoid (bottom = d1, top = d2, height = h);
+
+                    translate ([0, 500])
+                    square ([1000, 1000], center = true);
+                }
+
+                mirror (Y)
+                square ([1000, 1000]);
+            }
+
+            square ([1000, 1000]);
+        }
     }
 }
 
