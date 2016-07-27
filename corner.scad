@@ -291,6 +291,19 @@ module corner_blank (corner_blank_options)
             )
             rotate (90, X)
             aluex_screwhole (h_aluex, wall_thickness + epsilon);
+
+        /* logo */
+        translate ([0, -(v_radial + wall_thickness + epsilon), height / 2])
+        rotate (90, X)
+        mirror (Z)
+        linear_extrude (height = 0.6)
+        text (
+            "δbob",
+            font = "Ubuntu",
+            halign = "center",
+            valign = "center",
+            size = 8
+        );
     }
 }
 
