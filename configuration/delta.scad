@@ -24,7 +24,10 @@ deltabob = (
             v_aluex = v_aluex,
             v_aluex_orientation = v_aluex_orientation,
 
-            v_aluex_screwholes = [10, bottom_height - 10],
+            v_aluex_screwholes = [
+                10, 30,
+                bottom_height - 30, bottom_height - 10
+            ],
             h_aluex_screwholes = h_aluex_screwholes,
 
             h_aluex = h_aluex,
