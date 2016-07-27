@@ -19,7 +19,7 @@ deltabob = (
         arm_length = 80,
         wall_thickness = 5,
 
-        bottom_height = 150,
+        bottom_height = 100,
         corner_bottom = CornerBottom (
             v_aluex = v_aluex,
             v_aluex_orientation = v_aluex_orientation,
