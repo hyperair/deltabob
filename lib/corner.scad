@@ -170,7 +170,8 @@ function CornerTop (v_aluex,
 
                     wall_thickness,
                     cavity_width,
-                    arm_length) =
+                    arm_length,
+                    idler_size) =
 [
     ["corner_blank", CornerBlank (v_aluex = v_aluex,
                                   v_aluex_orientation = v_aluex_orientation,
@@ -184,7 +185,9 @@ function CornerTop (v_aluex,
 
                                   wall_thickness = wall_thickness,
                                   cavity_width = cavity_width,
-                                  arm_length = arm_length)]
+                                  arm_length = arm_length)],
+    ["idler_size", idler_size]
 ];
 
 function corner_top_get_blank (c) = dict_get (c, "corner_blank");
+function corner_top_get_idler_size (c) = dict_get (c, "idler_size");

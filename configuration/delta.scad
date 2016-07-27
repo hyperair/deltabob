@@ -50,7 +50,8 @@ deltabob = (
 
             wall_thickness = wall_thickness,
             cavity_width = corner_cavity_width,
-            arm_length = arm_length
+            arm_length = arm_length,
+            idler_size = 3
         )
     )
 
