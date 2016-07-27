@@ -13,3 +13,10 @@ vslot2040 = AluminiumExtrusionProfile (
     slot_width = 6,
     slot_profile = "v"
 );
+
+tslot2020 = AluminiumExtrusionProfile (
+    size = [20, 20],
+    slots = [[10], [10]],
+    slot_width = 5,
+    slot_profile = "t"
+);
