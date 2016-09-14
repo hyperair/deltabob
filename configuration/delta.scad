@@ -55,6 +55,17 @@ deltabob = (
             cavity_width = corner_cavity_width,
             arm_length = arm_length,
             idler_size = 3
+        ),
+
+        carriage = Carriage (
+            hinge_spacing = 50,
+            base_thickness = 7,
+            wheel_spacing = 40 + 18,
+            carriage_length = 80,
+            eccentric_od = 8,
+            wall_thickness = 5,
+            hinge_d = 10,
+            hinge_elevation = 8
         )
     )
 
@@ -67,6 +78,7 @@ deltabob = (
 
         top_corner = corner_top,
         bottom_corner = corner_bottom,
+        carriage = carriage,
 
         delta_radius = 240 / 2,
         rod_length = 138.5,
