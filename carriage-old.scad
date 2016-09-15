@@ -6,6 +6,7 @@ use <MCAD/shapes/2Dshapes.scad>
 use <MCAD/shapes/triangles.scad>
 use <MCAD/fasteners/nuts_and_bolts.scad>
 include <MCAD/units/metric.scad>
+use <gt2.scad>
 use <utils.scad>
 
 min_wall_thickness = 5;
@@ -101,7 +102,8 @@ module gt2_belt_clamp_static ()
             );
 
             gt2_belt (tooth_count = belt_clamp_tooth_count + 2,
-                width = belt_clamp1_height + 1);
+                      thickness = belt_thickness,
+                      width = belt_clamp1_height + 1);
 
             // chamfered entrance for easier installation
             translate ([0, 0, belt_clamp1_height + epsilon * 2])
@@ -184,35 +186,6 @@ module gt2_belt_clamp_adjustable_movingpart ()
         translate ([x, 0, 0])
         mcad_polyhole (d = 3.3, h = 1000, center = true);
     }
-}
-
-module gt2_belt (tooth_count, width, $fs = 0.01, $fa = 1)
-{
-    linear_extrude (height = width)
-    for (i = [0:tooth_count])
-    rotate (-90, Z)
-    translate ([(i - tooth_count / 2) * 2, 0])
-    offset (r = belt_clearance)
-    offset (r = -0.15)
-    offset (r = 0.15)
-    union () {
-        offset (r = 0.555)
-        offset (r = -0.555)
-        intersection () {
-            translate ([0.4, 0])
-            circle (r = 1);
-
-            translate ([-0.4, 0])
-            circle (r = 1);
-
-            translate ([-2, -0.75, 0])
-            square ([4, 1.38]);
-        }
-
-        translate ([-1.25, 0])
-        square ([2.5, belt_thickness - 0.75]);
-    }
-
 }
 
 module parallel_joints (reinforced) {
@@ -310,7 +283,7 @@ module carriage ()
 
     %mcad_mirror_duplicate (X)
     translate ([belt_x_offset, 0, carriage_base_thickness + 3])
-    gt2_belt (carriage_length / 2, belt_width);
+    gt2_belt (carriage_length / 2, belt_thickness, belt_width);
 
     translate ([0, arms_y_offset, carriage_hinge_offset - epsilon])
     rotate (180, Z)
