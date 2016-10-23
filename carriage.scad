@@ -171,6 +171,38 @@ module carriage_tensioner_block (options)
     }
 }
 
+module carriage_hinge_tether_block (options)
+{
+    hinge_elevation = carriage_get_hinge_elevation (options);
+    base_thickness = carriage_get_base_thickness (options);
+    extra_h = 2;
+    height = hinge_elevation + extra_h;
+    width = 10;
+
+    /* offset to avoid intersecting with belt */
+    x_offset = 2;
+
+    difference () {
+        translate ([x_offset, width / 2 - extra_h, 0])
+        filleted_cube (
+            [width, width, height],
+            center = X + Y,
+            fillet_sides = [0, 1, 2, 3],
+            fillet_r = 3
+        );
+
+        /* 45° cutout */
+        translate ([0, 0, hinge_elevation])
+        rotate (45, X)
+        ccube ([20, 10, 10], center = X + Y);
+
+        /* hole for string */
+        translate ([0, 0, hinge_elevation])
+        rotate (70, X)
+        cylinder (d = 1.5, h = 100, center = true);
+    }
+}
+
 module carriage (options)
 {
     thickness = carriage_get_base_thickness (options);
@@ -189,7 +221,8 @@ module carriage (options)
     carriage_hinge (options);
 
     /* middle block for hinge tether */
-    carriage_hinge_tether_block ();
+    translate ([0, 0, thickness - epsilon])
+    carriage_hinge_tether_block (options);
 
     /* belt clamp */
     belt_clamp_length = carriage_get_belt_clamp_length (options);
