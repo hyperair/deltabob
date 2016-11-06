@@ -26,7 +26,7 @@ clearance = 0.3;
 string_hole_d = 2;
 
 $fs = 0.4;
-$fa = 15;
+$fa = 1;
 
 module effector ()
 {
