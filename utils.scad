@@ -197,7 +197,7 @@ module screwhole (size, length, nut_projection = "axial",
 
         /* screw body */
         translate ([0, 0, cap_head_h - epsilon])
-        cylinder (d = size + 0.3, h = length + epsilon);
+        cylinder (d = size + 0.3, h = length + screw_extra_length + epsilon);
 
         /* nut */
         translate ([0, 0, cap_head_h + length - epsilon])
@@ -207,5 +207,5 @@ module screwhole (size, length, nut_projection = "axial",
             mcad_linear_multiply (no = 2, separation = 100, axis = axis)
             mcad_nut_hole (size = size);
         }
-    }    
+    }
 }
