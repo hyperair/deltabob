@@ -1,6 +1,7 @@
 use <MCAD/array/along_curve.scad>
 use <MCAD/array/mirror.scad>
 use <MCAD/shapes/boxes.scad>
+use <MCAD/shapes/polyhole.scad>
 
 use <lib/fillet.scad>
 
@@ -25,7 +26,12 @@ hotend_whole_sink_h = 50.1;
 
 exit_channel_width = 0.6 * hotend_sink_d;
 
-%translate ([0, 0, -(e3dv6_heaterblock_h + e3dv5_transition_length + e3dv6_nozzle_outer_h)])
+hotend_cap_thickness = 10;
+hotend_cap_arm_width = 15;
+effector_d = 80;
+bowden_tube_d = 4;
+
+*%translate ([0, 0, -(e3dv6_heaterblock_h + e3dv5_transition_length + e3dv6_nozzle_outer_h)])
 e3dv5 ();
 
 function sq (x) = x * x;
@@ -94,15 +100,53 @@ module fanduct_screw_pillars ()
     }
 }
 
+module place_effector_prong ()
+{
+    for (i = [0:3]) {
+        rotate (i * 120 + 60, Z)
+        children ();
+    }
+}
 
-// render ()
+module place_hotend_cap ()
+{
+    translate ([0, 0, hotend_whole_sink_h])
+    children ();
+}
+
+module hotend_cap ()
+{
+    place_hotend_cap ()
+    difference () {
+        linear_extrude (height = hotend_cap_thickness)
+        round (5)
+        round (-5)
+        union () {
+            circle (d = hotend_sink_d + wall_thickness * 2);
+
+            intersection () {
+                place_effector_prong ()
+                translate ([0, -hotend_cap_arm_width / 2])
+                square ([100, hotend_cap_arm_width]);
+
+                circle (d = effector_d);
+            }
+        }
+
+        translate ([0, 0, -epsilon])
+        mcad_polyhole (d = bowden_tube_d,
+                       h = hotend_cap_thickness + epsilon * 2);
+    }
+}
+
+render ()
 difference () {
     // outer shape
     render ()
     union () {
         basic_fanduct_shape ();
-
         fanduct_screw_pillars ();
+        hotend_cap ();
     }
 
     // air channel
@@ -121,6 +165,12 @@ difference () {
         );
     }
 
+    // exit channel
+    mirror (X)
+    translate ([0, 0, -epsilon])
+    ccube ([hotend_sink_d, exit_channel_width, hotend_sink_h], center = Y);
+
+    // fan screwholes
     place_fan ()
     mcad_mirror_duplicate (Y)
     for (x = [1, -1] * 33 / 2)
@@ -129,13 +179,48 @@ difference () {
         mirror (Z)
         screwhole (size = 3, length = 30, nut_projection = "axial");
 
-    // hotend area
-    cylinder (d = hotend_sink_d, h = hotend_sink_h);
+    // hotend cap screwholes
+    place_hotend_cap ()
+    place_effector_prong () {
+        /* rotate (60, Z) */
+        translate ([16/2 + 1 + 3/2, 0, hotend_cap_thickness])
+        mirror (X)
+        render ()
+        intersection () {
+            mirror (Z)
+            screwhole (size = 3,
+                       length = hotend_cap_thickness + 2,
+                       nut_projection = "radial",
+                       screw_extra_length = 5);
 
-    // exit channel
-    mirror (X)
-    translate ([0, 0, -epsilon])
-    ccube ([hotend_sink_d, exit_channel_width, hotend_sink_h], center = Y);
+            cylinder (d = 16, h = 9999, center = true);
+        }
+    }
+
+    // effector screwholes
+    place_hotend_cap ()
+    place_effector_prong () {
+        translate (
+            [effector_d / 2 - hotend_cap_arm_width / 2,
+             0,
+             hotend_cap_thickness]
+        )
+        mirror (Z)
+        screwhole (size = 3,
+                   length = hotend_whole_sink_h + hotend_cap_thickness,
+                   nut_projection = "axial");
+    }
+
+    // hotend area
+    stacked_cylinder (
+        [
+            [16, 5],
+            [12, 5.4],
+            [16, 9],
+            [hotend_sink_d, hotend_sink_h]
+        ]
+    );
+    cylinder (d = 16, h = hotend_sink_h + 9);
 
     // actual fan
     place_fan ()

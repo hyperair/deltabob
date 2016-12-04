@@ -174,7 +174,8 @@ cap_screw_head_diameters = [
  */
 module screwhole (size, length, nut_projection = "axial",
                   align_with = "above_head",
-                  screw_extra_length = 9999, head_extra_length = 9999)
+                  screw_extra_length = 9999, head_extra_length = 9999,
+                  nut_projection_length = 100)
 {
     cap_head_d = lookup (size, cap_screw_head_diameters);
     cap_head_h = size;
@@ -204,7 +205,8 @@ module screwhole (size, length, nut_projection = "axial",
         hull () {
             axis = (nut_projection == "axial") ? +Z : +X;
 
-            mcad_linear_multiply (no = 2, separation = 100, axis = axis)
+            mcad_linear_multiply (no = 2, separation = nut_projection_length,
+                                  axis = axis)
             mcad_nut_hole (size = size);
         }
     }
