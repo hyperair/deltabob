@@ -1,5 +1,7 @@
 use <MCAD/array/along_curve.scad>
 use <MCAD/array/mirror.scad>
+use <MCAD/fasteners/nuts_and_bolts.scad>
+use <MCAD/fasteners/threads.scad>
 use <MCAD/shapes/boxes.scad>
 use <MCAD/shapes/polyhole.scad>
 
@@ -28,8 +30,10 @@ exit_channel_width = 0.6 * hotend_sink_d;
 
 hotend_cap_thickness = 10;
 hotend_cap_arm_width = 15;
-effector_d = 80;
-bowden_tube_d = 4;
+effector_d = 95;
+effector_h = 10;
+bowden_tube_d = 4.5;
+bowden_nut_size = M4;
 
 *%translate ([0, 0, -(e3dv6_heaterblock_h + e3dv5_transition_length + e3dv6_nozzle_outer_h)])
 e3dv5 ();
@@ -118,24 +122,107 @@ module hotend_cap ()
 {
     place_hotend_cap ()
     difference () {
-        linear_extrude (height = hotend_cap_thickness)
-        round (5)
-        round (-5)
         union () {
-            circle (d = hotend_sink_d + wall_thickness * 2);
+            linear_extrude (height = hotend_cap_thickness)
+            round (5)
+            round (-5)
+            union () {
+                circle (d = hotend_sink_d + wall_thickness * 2);
 
+                intersection () {
+                    place_effector_prong ()
+                    translate ([0, -hotend_cap_arm_width / 2])
+                    square ([100, hotend_cap_arm_width]);
+
+                    circle (d = effector_d);
+                }
+            }
+
+            // threaded bowden coupler
+            translate ([0, 0, hotend_cap_thickness - epsilon])
+            metric_thread (
+                diameter = 16,
+                pitch = 2,
+                length = 10
+            );
+
+        }
+
+        // taper for the thread
+        translate ([0, 0, hotend_cap_thickness + 10 - 2])
+        difference () {
+            ccube ([20, 20, 20], center = X + Y);
+
+            translate ([0, 0, -epsilon])
+            cylinder (d1 = 16, d2 = 16 - 2*2, h = 2);
+        }
+
+        // bowden hole
+        translate ([0, 0, -epsilon])
+        cylinder (d = bowden_tube_d + 0.3,
+                  h = 100);
+
+        // bowden nut trap
+        nut_thickness = mcad_metric_nut_thickness (bowden_nut_size);
+        translate ([0, 0, hotend_cap_thickness + 10 + 0.5 - nut_thickness])
+        hull ()
+        mcad_linear_multiply (no = 2, separation = 100, axis = +Z)
+        mcad_nut_hole (size = bowden_nut_size);
+    }
+}
+
+module effector ()
+{
+    module base_ring ()
+    {
+        translate ([0, 0, -effector_h])
+        difference () {
+            cylinder (d = effector_d, h = effector_h);
+
+            translate ([0, 0, -epsilon])
+            cylinder (d = effector_d - 30, h = effector_h + epsilon * 2);
+        }
+    }
+
+    module single_prong_shape ()
+    {
+        render ()
+        translate ([0, 0, -epsilon])
+        linear_extrude (height = hotend_whole_sink_h)
+        difference () {
+            round (5)
             intersection () {
-                place_effector_prong ()
                 translate ([0, -hotend_cap_arm_width / 2])
-                square ([100, hotend_cap_arm_width]);
+                square ([50, hotend_cap_arm_width]);
 
                 circle (d = effector_d);
             }
+            circle (d = effector_d - 30);
+        }
+    }
+
+    module single_prong ()
+    {
+        fillet (r = 5, steps = 10, include = false) {
+            single_prong_shape ();
+
+            mirror (Z)
+            cylinder (d = effector_d, h = 10);
         }
 
-        translate ([0, 0, -epsilon])
-        mcad_polyhole (d = bowden_tube_d,
-                       h = hotend_cap_thickness + epsilon * 2);
+        single_prong_shape ();
+    }
+
+    base_ring ();
+
+    render ()
+    difference () {
+        place_effector_prong ()
+        render ()
+        single_prong ();
+
+        translate ([0, 0, -10])
+        cylinder (d = effector_d - 30, h = 15);
     }
 }
 
@@ -147,6 +234,8 @@ difference () {
         basic_fanduct_shape ();
         fanduct_screw_pillars ();
         hotend_cap ();
+
+        effector ();
     }
 
     // air channel
@@ -207,7 +296,10 @@ difference () {
         )
         mirror (Z)
         screwhole (size = 3,
-                   length = hotend_whole_sink_h + hotend_cap_thickness,
+                   length = (hotend_whole_sink_h + hotend_cap_thickness +
+                             effector_h -
+                             mcad_metric_nut_thickness (3) -
+                             3),
                    nut_projection = "axial");
     }
 
