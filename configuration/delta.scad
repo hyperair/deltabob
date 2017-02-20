@@ -4,6 +4,7 @@ use <../lib/aluex.scad>
 use <../lib/carriage.scad>
 use <../lib/corner.scad>
 use <../lib/delta.scad>
+use <../lib/effector.scad>
 
 /* include <carriage.scad> */
 include <extrusions.scad>
@@ -61,6 +62,9 @@ deltabob = (
         belt_width = 6,
         belt_thickness = 1.38,
 
+        hinge_spacing = 50,
+        hinge_d = 10,
+
         carriage = Carriage (
             base_thickness = 7,
             carriage_length = 80,
@@ -68,9 +72,9 @@ deltabob = (
             eccentric_od = 8,
             wall_thickness = 5,
 
-            hinge_d = 10,
+            hinge_d = hinge_d,
             hinge_elevation = 8,
-            hinge_spacing = 50,
+            hinge_spacing = hinge_spacing,
 
             belt_clamp_tooth_count = 8,
             belt_clamp_height = belt_width + 10,
@@ -84,6 +88,17 @@ deltabob = (
             belt_width = belt_width,
             belt_thickness = belt_thickness,
             belt_doubled_thickness = 2
+        ),
+
+        effector = Effector (
+            hinge_d = hinge_d,
+            hinge_spacing = hinge_spacing,
+            hinge_elevation = 8,
+            hinge_offset = 50,
+
+            cavity_d = 65,
+            wall_thickness = 2,
+            thickness = 5
         )
     )
 
@@ -97,6 +112,7 @@ deltabob = (
         top_corner = corner_top,
         bottom_corner = corner_bottom,
         carriage = carriage,
+        effector = effector,
 
         delta_radius = 240 / 2,
         rod_length = 138.5,
