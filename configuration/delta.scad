@@ -98,7 +98,12 @@ deltabob = (
 
             cavity_d = 65,
             wall_thickness = 2,
-            thickness = 5
+            thickness = 5,
+
+            prong_width = 15,
+            prong_height = 40,
+
+            magnet_d = 12
         )
     )
 

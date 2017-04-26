@@ -85,7 +85,50 @@ module effector_tether_block (opts)
     cylinder (d = 2 + wall_thickness * 2, h = 100);
 }
 
-module effector_probe_ears (opts);
+module effector_probe_ears (opts)
+{
+}
+
+module effector_prongs (opts)
+{
+    prong_width = effector_get_prong_width (opts);
+    cavity_d = effector_get_cavity_d (opts);
+    prong_height = effector_get_prong_height (opts);
+
+    mcad_rotate_multiply (no = 3, angle = 120)
+    linear_extrude (height = prong_height)
+    difference () {
+        offset (r = 5)
+        offset (r = -5)
+        intersection () {
+            translate ([-prong_width/2, 0])
+            square ([prong_width, cavity_d + 10]);
+
+            circle (d = cavity_d + 10 * 2);
+        }
+
+        circle (d = cavity_d);
+    }
+}
+
+module magnet_holes (opts)
+{
+    magnet_d = effector_get_magnet_d (opts);
+    thickness = effector_get_thickness (opts);
+    cavity_d = effector_get_cavity_d (opts);
+
+    rotate (60, Z)
+    mcad_rotate_multiply (no = 3, angle = 120)
+    translate ([0, cavity_d / 2 + 10, 0]) {
+        /* magnet holes */
+        translate ([0, 0, thickness - thickness / 2])
+        cylinder (d = magnet_d + 0.5, h = 100);
+
+        /* centering holes */
+        translate ([0, 0, -epsilon])
+        cylinder (d1 = thickness / 2, d2 = 0, h = thickness / 2);
+    }
+}
 
 module effector (opts)
 {
@@ -116,7 +159,9 @@ module effector (opts)
                 mirror (Z)
                 ccube ([1000, 1000, 100], center = X + Y);
             }
+
             effector_probe_ears (opts);
+            effector_prongs (opts);
         }
 
         /* center cavity */
@@ -129,6 +174,12 @@ module effector (opts)
         /* tether holes */
         effector_place_hinge_pairs (opts)
         cylinder (d = 2, h = 30, center = true);
+
+        /* hotend holes */
+        effector_hotend_screwholes (opts);
+
+        /* holes for magnet */
+        magnet_holes (opts);
     }
 }
 

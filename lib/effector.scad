@@ -4,7 +4,10 @@ function Effector (
     hinge_d, hinge_spacing, hinge_elevation, hinge_offset,
     cavity_d,
     wall_thickness,
-    thickness = 1
+    thickness,
+    prong_width,
+    prong_height,
+    magnet_d
 ) =
 [
     ["hinge_d", hinge_d],
@@ -16,6 +19,11 @@ function Effector (
 
     ["wall_thickness", wall_thickness],
     ["thickness", thickness],
+
+    ["prong_width", prong_width],
+    ["prong_height", prong_height],
+
+    ["magnet_d", magnet_d]
 ];
 
 function effector_get_hinge_d (e) = dict_get (e, "hinge_d");
@@ -34,4 +42,10 @@ function effector_get_hinge_od (e) = (
     hinge_d + wall_thickness * 2
 );
 
-function effector_get_thickness (e) = dict_get(e, "thickness");
+function effector_get_thickness (e) = dict_get (e, "thickness");
+
+function effector_get_prong_width (e) = dict_get (e, "prong_width");
+function effector_get_prong_height (e) = dict_get (e, "prong_height");
+function effector_get_prong_orbit_r (e) = dict_get (e, "cavity_d") / 2 + 5;
+
+function effector_get_magnet_d (e) = dict_get (e, "magnet_d");
