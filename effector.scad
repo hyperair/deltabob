@@ -113,7 +113,7 @@ module effector_prongs (opts)
     }
 }
 
-module effector_magnet_holes (opts)
+module magnet_holes (opts)
 {
     magnet_d = effector_get_magnet_d (opts);
     thickness = effector_get_thickness (opts);
@@ -128,7 +128,7 @@ module effector_magnet_holes (opts)
 
         /* centering holes */
         translate ([0, 0, -epsilon])
-        cylinder (d1 = 3 + thickness / 2, d2 = 3, h = thickness / 2);
+        cylinder (d1 = thickness / 2, d2 = 0, h = thickness / 2);
     }
 }
 
@@ -198,7 +198,7 @@ module effector (opts)
         effector_hotend_screwholes (opts);
 
         /* holes for magnet */
-        effector_magnet_holes (opts);
+        magnet_holes (opts);
     }
 }
 
