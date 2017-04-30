@@ -1,10 +1,12 @@
 use <MCAD/array/along_curve.scad>
+use <MCAD/fasteners/nuts_and_bolts.scad>
 use <MCAD/shapes/2Dshapes.scad>
 include <MCAD/units/metric.scad>
 
 include <configuration/delta.scad>
 use <lib/delta.scad>
 use <lib/effector.scad>
+use <utils.scad>
 
 $fs = 0.4;
 $fa = 1;
@@ -111,7 +113,7 @@ module effector_prongs (opts)
     }
 }
 
-module magnet_holes (opts)
+module effector_magnet_holes (opts)
 {
     magnet_d = effector_get_magnet_d (opts);
     thickness = effector_get_thickness (opts);
@@ -126,8 +128,25 @@ module magnet_holes (opts)
 
         /* centering holes */
         translate ([0, 0, -epsilon])
-        cylinder (d1 = thickness / 2, d2 = 0, h = thickness / 2);
+        cylinder (d1 = 3 + thickness / 2, d2 = 3, h = thickness / 2);
     }
+}
+
+module effector_hotend_screwholes (opts)
+{
+    orbit_r = effector_get_prong_orbit_r (opts);
+    prong_height = effector_get_prong_height (opts);
+    thickness = effector_get_thickness (opts);
+    nut_thickness = mcad_metric_nut_thickness (3);
+
+    mcad_rotate_multiply (no = 3, angle = 120)
+    mirror (Z)
+    translate ([0, orbit_r])
+    screwhole (
+        size = 3,
+        length = prong_height + thickness - nut_thickness,
+        align_with = "above_nut"
+    );
 }
 
 module effector (opts)
@@ -179,7 +198,7 @@ module effector (opts)
         effector_hotend_screwholes (opts);
 
         /* holes for magnet */
-        magnet_holes (opts);
+        effector_magnet_holes (opts);
     }
 }
 
