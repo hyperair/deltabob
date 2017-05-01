@@ -113,7 +113,7 @@ module effector_prongs (opts)
     }
 }
 
-module magnet_holes (opts)
+module effector_magnet_holes (opts)
 {
     magnet_d = effector_get_magnet_d (opts);
     thickness = effector_get_thickness (opts);
@@ -198,7 +198,7 @@ module effector (opts)
         effector_hotend_screwholes (opts);
 
         /* holes for magnet */
-        magnet_holes (opts);
+        effector_magnet_holes (opts);
     }
 }
 
