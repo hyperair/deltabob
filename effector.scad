@@ -128,7 +128,7 @@ module magnet_holes (opts)
 
         /* centering holes */
         translate ([0, 0, -epsilon])
-        cylinder (d1 = thickness / 2, d2 = 0, h = thickness / 2);
+        cylinder (d1 = 3 + thickness / 2, d2 = 3, h = thickness / 2);
     }
 }
 
