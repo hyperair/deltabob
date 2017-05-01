@@ -167,7 +167,7 @@ cap_screw_head_diameters = [
  * screwhole - renders a cap screw hole
  *
  * @param size Diameter of screw
- * @param length Fastened length (distance between screw and nut
+ * @param length Fastened length (distance between screw and nut)
  * @param nut_projection Direction to project nut in (axial, radial)
  * @param align_with Alignment of whole set (above_head, below_head, center,
  *                                           below_nut, above_nut)
