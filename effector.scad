@@ -67,6 +67,7 @@ module effector_place_hinge_pairs (opts)
 {
     hinge_offset = effector_get_hinge_offset (opts);
 
+    rotate (60, Z)
     mcad_rotate_multiply (no = 3, angle = 120)
     translate ([0, hinge_offset])
     children ();
@@ -113,22 +114,30 @@ module effector_prongs (opts)
     }
 }
 
+module effector_place_magnets (opts)
+{
+    magnet_offset = effector_get_magnet_offset (opts);
+
+    rotate (60 + 15, Z)
+    mcad_rotate_multiply (no = 3, angle = 120)
+    translate ([0, magnet_offset, 0])
+    children ();
+}
+
 module effector_magnet_holes (opts)
 {
     magnet_d = effector_get_magnet_d (opts);
+    magnet_h = effector_get_magnet_h (opts);
     thickness = effector_get_thickness (opts);
-    cavity_d = effector_get_cavity_d (opts);
 
-    rotate (60, Z)
-    mcad_rotate_multiply (no = 3, angle = 120)
-    translate ([0, cavity_d / 2 + 10, 0]) {
+    effector_place_magnets (opts) {
         /* magnet holes */
         translate ([0, 0, thickness - thickness / 2])
-        cylinder (d = magnet_d + 0.5, h = 100);
+        cylinder (d = magnet_d + 0.5, h = magnet_h);
 
         /* centering holes */
         translate ([0, 0, -epsilon])
-        cylinder (d1 = 3 + thickness / 2, d2 = 3, h = thickness / 2);
+        cylinder (d1 = 5 + thickness / 2, d2 = 5, h = thickness / 2);
     }
 }
 
