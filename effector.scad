@@ -158,6 +158,69 @@ module effector_hotend_screwholes (opts)
     );
 }
 
+module effector_fan_mount (opts)
+{
+    thickness = 6;
+    nut_thickness = mcad_metric_nut_thickness (3);
+    hub_d = 12;
+    width = hub_d * 2;
+
+    module place_screw ()
+    {
+        translate ([hub_d / 2 + 2, 0])
+        children ();
+    }
+
+    translate ([0, 0, -thickness / 2])
+    difference () {
+        union () {
+            linear_extrude (height = thickness)
+            hull () {
+                translate ([0, -width / 2])
+                square ([epsilon, width]);
+
+                place_screw ()
+                circle (d = hub_d);
+            }
+
+            /* nut trap */
+            place_screw ()
+            mirror (Z)
+            rotate_extrude ()
+            translate ([hub_d / 2 / 2, 0])
+            trapezoid (
+                bottom = hub_d / 2, top = hub_d / 2 - nut_thickness,
+                height = nut_thickness,
+                left_angle = 90
+            );
+        }
+
+        place_screw ()
+        translate ([0, 0, thickness])
+        mirror (Z)
+        screwhole (
+            size = 3,
+            length = thickness,
+            align_with = "below_head"
+        );
+
+        /* center cutout */
+        translate ([-epsilon, 0, thickness / 3])
+        ccube (concat ([1, 1] * width * 2, [thickness / 3]), center = Y);
+    }
+}
+
+module effector_place_fan (opts)
+{
+    cavity_d = effector_get_cavity_d (opts);
+
+    mcad_rotate_multiply (no = 3)
+    rotate (90, Z)
+    translate ([cavity_d / 2 + 10, 0, 15])
+    render () rotate (90, X)
+    children ();
+}
+
 module effector (opts)
 {
     thickness = effector_get_thickness (opts);
@@ -190,6 +253,9 @@ module effector (opts)
 
             effector_probe_ears (opts);
             effector_prongs (opts);
+
+            effector_place_fan (opts)
+            effector_fan_mount (opts);
         }
 
         /* center cavity */
