@@ -12,6 +12,7 @@ function Delta (
 
     carriage,
     effector,
+    hotend,
     /*
     rod,
     effector,
@@ -31,6 +32,7 @@ function Delta (
 
     ["carriage", carriage],
     ["effector", effector],
+    ["hotend", hotend],
 
     ["delta_radius", delta_radius],
     ["rod_length", rod_length],
@@ -49,8 +51,9 @@ function delta_get_delta_radius (d) = dict_get (d, "delta_radius");
 function delta_get_rod_length (d) = dict_get (d, "rod_length");
 function delta_get_hinge_spacing (d) = dict_get (d, "hinge_spacing");
 
-function delta_get_carriage (d) = dict_get(d, "carriage");
-function delta_get_effector (d) = dict_get(d, "effector");
+function delta_get_carriage (d) = dict_get (d, "carriage");
+function delta_get_effector (d) = dict_get (d, "effector");
+function delta_get_hotend (d) = dict_get (d, "hotend");
 
 function delta_get_v_circumferential (d) =
 (

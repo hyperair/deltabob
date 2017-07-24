@@ -105,9 +105,19 @@ deltabob = (
 
             magnet_d = 8.3,
             magnet_h = 4
+        ),
+
+        e3dv5 = Hotend (
+            sink_d = 25,
+            sink_h = 31.8,
+            whole_sink_h = 50.1,
+            groove_profile = [
+                [16, 5],
+                [12, 5.4],
+                [16, 9]
+            ]
         )
     )
-
 
     Delta (
         v_aluex = v_aluex,
@@ -119,6 +129,7 @@ deltabob = (
         bottom_corner = corner_bottom,
         carriage = carriage,
         effector = effector,
+        hotend = e3dv5,
 
         delta_radius = 240 / 2,
         rod_length = 138.5,
