@@ -229,3 +229,12 @@ module screwhole (size, length, nut_projection = "axial",
         }
     }
 }
+
+module rounded_square (size, r)
+{
+    hull ()
+    for (x = [-1, 1] * (size[0]/2 - r))
+        for (y = [-1, 1] * (size[1]/2 - r))
+            translate ([x, y])
+            circle (r = r);
+}
