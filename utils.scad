@@ -143,10 +143,28 @@ module stacked_cylinder (sizes)
         d = size[0];
         h = size[1];
 
-        cylinder (d = d, h = h);
+        next_size = (len (sizes) >= 2) ? sizes[len (sizes) - 2] : undef;
+        next_d = (next_size != undef) ? next_size[0] : undef;
+        next_h = (next_size != undef) ? next_size[1] : undef;
 
-        translate ([0, 0, h])
-        stacked_cylinder (slice (sizes, length = len (sizes) - 1));
+        if (next_size == undef) {
+            cylinder (d = d, h = h);
+        } else if (d <= next_d) {
+            cylinder (d = d, h = h + epsilon);
+
+            translate ([0, 0, h])
+            stacked_cylinder (slice (sizes, length = len (sizes) - 1));
+        } else {  // d > next_d
+            cylinder (d = d, h = h);
+
+            translate ([0, 0, h - epsilon])
+            stacked_cylinder (
+                concat (
+                    slice (sizes, length = len (sizes) - 2),
+                    [[next_d, next_h + epsilon]]
+                )
+            );
+        }
     }
 }
 
