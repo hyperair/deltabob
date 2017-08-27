@@ -5,9 +5,12 @@ use <../lib/carriage.scad>
 use <../lib/corner.scad>
 use <../lib/delta.scad>
 use <../lib/effector.scad>
+use <../lib/hotend.scad>
+use <../lib/groovemount.scad>
 
 /* include <carriage.scad> */
 include <extrusions.scad>
+include <fans.scad>
 
 deltabob = (
     let (
@@ -116,6 +119,14 @@ deltabob = (
                 [12, 5.4],
                 [16, 9]
             ]
+        ),
+
+        groovemount = Groovemount (
+            hotend = e3dv5,
+            fan = fan4010,
+            fan_inset_depth = 1,
+            fan_offset = 7,
+            wall_thickness = 1
         )
     )
 
@@ -130,6 +141,7 @@ deltabob = (
         carriage = carriage,
         effector = effector,
         hotend = e3dv5,
+        groovemount = groovemount,
 
         delta_radius = 240 / 2,
         rod_length = 138.5,
