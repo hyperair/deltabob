@@ -238,3 +238,9 @@ module rounded_square (size, r)
             translate ([x, y])
             circle (r = r);
 }
+
+function sq (x) = x * x;
+
+function chord_length (radius, normal_length) = (
+    sqrt (sq (radius) - sq (normal_length))
+);

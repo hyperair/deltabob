@@ -1,5 +1,6 @@
 use <MCAD/array/along_curve.scad>
 use <MCAD/array/mirror.scad>
+use <MCAD/shapes/2Dshapes.scad>
 include <MCAD/units/metric.scad>
 
 use <lib/fillet.scad>
@@ -98,6 +99,36 @@ module groovemount_screw_pillars (options)
 
 module groovemount_air_channel (options)
 {
+    fan = groovemount_get_fan (options);
+    fan_inset_depth = groovemount_get_fan_inset_depth (options);
+    fan_d = axial_fan_get_d (fan);
+
+    hotend = groovemount_get_hotend (options);
+    hotend_sink_d = hotend_get_sink_d (hotend);
+    hotend_sink_h = hotend_get_sink_h (hotend);
+
+    exit_channel_width = groovemount_get_exit_channel_width (options);
+
+    // air channel
+    render ()
+    hull () {
+        place_fan (options)
+        cylinder (d = fan_d, h = fan_inset_depth + epsilon);
+
+        chord_normal = 0.4 * hotend_sink_d/2;
+        translate ([chord_normal, 0, 0])
+        ccube (
+            [epsilon,
+             chord_length (hotend_sink_d/2, chord_normal),
+             hotend_sink_h],
+            center = X + Y
+        );
+    }
+
+    // exit channel
+    mirror (X)
+    translate ([0, 0, -epsilon])
+    ccube ([hotend_sink_d, exit_channel_width, hotend_sink_h], center = Y);
 }
 
 module groovemount_base_shape (options)
@@ -112,6 +143,7 @@ module groovemount_base_shape (options)
         }
 
         hotend (hotend);
+        groovemount_air_channel (options);
     }
 }
 

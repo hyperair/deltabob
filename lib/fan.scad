@@ -7,6 +7,7 @@ function AxialFan (width, thickness, corner_radius, screw_distance) = [
     ["screw_distance", screw_distance]
 ];
 
+function axial_fan_get_d (d) = axial_fan_get_width (d);
 function axial_fan_get_width (d) = dict_get (d, "width");
 function axial_fan_get_thickness (d) = dict_get (d, "thickness");
 function axial_fan_get_corner_radius (d) = dict_get (d, "corner_radius");
