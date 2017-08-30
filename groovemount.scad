@@ -1,6 +1,7 @@
 use <MCAD/array/along_curve.scad>
 use <MCAD/array/mirror.scad>
 use <MCAD/shapes/2Dshapes.scad>
+use <MCAD/shapes/boxes.scad>
 include <MCAD/units/metric.scad>
 
 use <lib/fillet.scad>
@@ -97,6 +98,21 @@ module groovemount_screw_pillars (options)
     }
 }
 
+module groovemount_fan_screwholes (options)
+{
+    fan = groovemount_get_fan (options);
+    fan_screw_distance = axial_fan_get_screw_distance (fan);
+    screw_offset = fan_screw_distance / 2;
+
+    place_fan (options)
+    mcad_mirror_duplicate (Y)
+    for (x = [1, -1] * screw_offset)
+        translate ([x, screw_offset, 10])
+        rotate (90, Z)
+        mirror (Z)
+        screwhole (size = 3, length = 30, nut_projection = "axial");
+}
+
 module groovemount_air_channel (options)
 {
     fan = groovemount_get_fan (options);
@@ -131,6 +147,19 @@ module groovemount_air_channel (options)
     ccube ([hotend_sink_d, exit_channel_width, hotend_sink_h], center = Y);
 }
 
+module groovemount_fan_inset (options)
+{
+    fan = groovemount_get_fan (options);
+    width = axial_fan_get_width (fan);
+    thickness = axial_fan_get_thickness (fan);
+    radius = axial_fan_get_corner_radius (fan);
+
+    place_fan (options)
+    translate ([0, 0, thickness / 2])
+    mcad_rounded_box ([width, width, thickness], radius = radius,
+                      sidesonly = true, center = true);
+}
+
 module groovemount_base_shape (options)
 {
     hotend = groovemount_get_hotend (options);
@@ -143,7 +172,10 @@ module groovemount_base_shape (options)
         }
 
         hotend (hotend);
+
+        groovemount_fan_inset (options);
         groovemount_air_channel (options);
+        groovemount_fan_screwholes (options);
     }
 }
 
