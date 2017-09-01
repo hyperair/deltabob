@@ -113,6 +113,47 @@ module groovemount_fan_screwholes (options)
         screwhole (size = 3, length = 30, nut_projection = "axial");
 }
 
+module place_hotend_cap (options)
+{
+    hotend = groovemount_get_hotend (options);
+    hotend_whole_sink_h = hotend_get_whole_sink_h (hotend);
+
+    translate ([0, 0, hotend_whole_sink_h])
+    children ();
+}
+
+module place_effector_prong ()
+{
+    for (i = [0:3]) {
+        rotate (i * 120 + 60, Z)
+        children ();
+    }
+}
+
+module groovemount_cap_screwholes (options)
+{
+    screw_orbit_r = groovemount_get_hotend_cap_screw_orbit_r (options);
+    hotend_cap_thickness = groovemount_get_hotend_cap_thickness (options);
+
+    place_hotend_cap (options)
+    place_effector_prong () {
+        /* rotate (60, Z) */
+        translate ([screw_orbit_r, 0, hotend_cap_thickness])
+        mirror (X)
+        render ()
+        intersection () {
+            mirror (Z)
+            screwhole (size = 3,
+                       length = hotend_cap_thickness + 2,
+                       nut_projection = "radial",
+                       screw_extra_length = 5);
+
+            cylinder (r = screw_orbit_r, h = 9999, center = true);
+        }
+    }
+
+}
+
 module groovemount_air_channel (options)
 {
     fan = groovemount_get_fan (options);
@@ -176,8 +217,8 @@ module groovemount_base_shape (options)
         groovemount_fan_inset (options);
         groovemount_air_channel (options);
         groovemount_fan_screwholes (options);
+        groovemount_cap_screwholes (options);
     }
 }
-
 
 groovemount_base_shape (delta_get_groovemount (deltabob));
