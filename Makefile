@@ -16,6 +16,7 @@ SCADFILES =					\
 	joint.scad				\
 	top-corner.scad				\
 	tslotnut.scad				\
+	groovemount.scad			\
 	groovemount-top.scad			\
 	groovemount-bottom.scad			\
 	groovemount-cap.scad			\
