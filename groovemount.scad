@@ -14,6 +14,8 @@ use <utils.scad>
 $fs = 0.4;
 $fa = 1;
 
+mode = "preview";
+
 
 module place_fan (options)
 {
@@ -221,4 +223,40 @@ module groovemount_base_shape (options)
     }
 }
 
-groovemount_base_shape (delta_get_groovemount (deltabob));
+module groovemount_front (options)
+{
+    render ()
+    difference () {
+        groovemount_base_shape (options);
+
+        translate ([0, 0, -epsilon])
+        mirror (X)
+        ccube ([60, 60, 100], center = Y);
+    }
+}
+
+module groovemount_back (options)
+{
+    render ()
+    difference () {
+        groovemount_base_shape (options);
+
+        translate ([0, 0, -epsilon])
+        ccube ([60, 60, 100], center = Y);
+    }
+}
+
+groovemount = delta_get_groovemount (deltabob);
+
+if (mode == "preview") {
+    groovemount_base_shape (groovemount);
+} else {
+    rotate (-90, Y)
+    groovemount_front (groovemount);
+
+
+    translate ([0, -60])
+    rotate (180, Z)
+    rotate (90, Y)
+    groovemount_back (groovemount);
+}
