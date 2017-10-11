@@ -128,6 +128,9 @@ deltabob = (
             fan_offset = 7,
             wall_thickness = 1,
             bowden_coupler_thread_d = 16,
+            bowden_nut_size = 4,
+            bowden_tube_d = 4,
+            hotend_cap_arm_width = 15,
             hotend_cap_thickness = 10
         )
     )
