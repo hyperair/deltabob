@@ -273,59 +273,63 @@ module groovemount_hotend_cap (options, effector)
     hotend = groovemount_get_hotend (options);
     hotend_sink_d = hotend_get_sink_d (hotend);
 
-    effector_d = effector_get_cavity_d (effector);
+    effector_d = effector_get_cavity_d (effector) + 10 * 2;
 
     bowden_nut_size = groovemount_get_bowden_nut_size (options);
     bowden_tube_d = groovemount_get_bowden_tube_d (options);
 
-    place_hotend_cap (options)
     difference () {
-        union () {
-            linear_extrude (height = hotend_cap_thickness)
-            round (5)
-            round (-5)
+        place_hotend_cap (options)
+        difference () {
             union () {
-                circle (d = hotend_sink_d + wall_thickness * 2);
+                linear_extrude (height = hotend_cap_thickness)
+                round (5)
+                round (-5)
+                union () {
+                    circle (d = hotend_sink_d + wall_thickness * 2);
 
-                intersection () {
-                    mcad_rotate_multiply (no = 3, angle = 120)
-                    translate ([0, -hotend_cap_arm_width / 2])
-                    square ([100, hotend_cap_arm_width]);
+                    intersection () {
+                        mcad_rotate_multiply (no = 3, angle = 120)
+                        translate ([0, -hotend_cap_arm_width / 2])
+                        square ([100, hotend_cap_arm_width]);
 
-                    circle (d = effector_d);
+                        circle (d = effector_d);
+                    }
                 }
+
+                // threaded bowden coupler
+                translate ([0, 0, hotend_cap_thickness - epsilon])
+                metric_thread (
+                    diameter = 16,
+                    pitch = 2,
+                    length = 10
+                );
+
             }
 
-            // threaded bowden coupler
-            translate ([0, 0, hotend_cap_thickness - epsilon])
-            metric_thread (
-                diameter = 16,
-                pitch = 2,
-                length = 10
-            );
+            // taper for the thread
+            translate ([0, 0, hotend_cap_thickness + 10 - 2])
+            difference () {
+                ccube ([20, 20, 20], center = X + Y);
 
-        }
+                translate ([0, 0, -epsilon])
+                cylinder (d1 = 16, d2 = 16 - 2*2, h = 2);
+            }
 
-        // taper for the thread
-        translate ([0, 0, hotend_cap_thickness + 10 - 2])
-        difference () {
-            ccube ([20, 20, 20], center = X + Y);
-
+            // bowden hole
             translate ([0, 0, -epsilon])
-            cylinder (d1 = 16, d2 = 16 - 2*2, h = 2);
+            cylinder (d = bowden_tube_d + 0.3,
+                      h = 100);
+
+            // bowden nut trap
+            nut_thickness = mcad_metric_nut_thickness (bowden_nut_size);
+            translate ([0, 0, hotend_cap_thickness + 10 + 0.5 - nut_thickness])
+            hull ()
+            mcad_linear_multiply (no = 2, separation = 100, axis = +Z)
+            mcad_nut_hole (size = bowden_nut_size);
         }
 
-        // bowden hole
-        translate ([0, 0, -epsilon])
-        cylinder (d = bowden_tube_d + 0.3,
-                  h = 100);
-
-        // bowden nut trap
-        nut_thickness = mcad_metric_nut_thickness (bowden_nut_size);
-        translate ([0, 0, hotend_cap_thickness + 10 + 0.5 - nut_thickness])
-        hull ()
-        mcad_linear_multiply (no = 2, separation = 100, axis = +Z)
-        mcad_nut_hole (size = bowden_nut_size);
+        groovemount_cap_screwholes (options);
     }
 }
 
@@ -334,6 +338,8 @@ effector = delta_get_effector (deltabob);
 
 if (mode == "preview") {
     groovemount_base_shape (groovemount);
+
+    render ()
     groovemount_hotend_cap (groovemount, effector);
 } else {
     rotate (-90, Y)
