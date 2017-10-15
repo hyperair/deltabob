@@ -135,10 +135,16 @@ module place_effector_prong ()
     }
 }
 
-module groovemount_cap_screwholes (options)
+module groovemount_cap_screwholes (options, effector = undef)
 {
     screw_orbit_r = groovemount_get_hotend_cap_screw_orbit_r (options);
     hotend_cap_thickness = groovemount_get_hotend_cap_thickness (options);
+
+    effector_screw_orbit_r = (
+        (effector != undef) ?
+        effector_get_prong_orbit_r (effector) :
+        undef
+    );
 
     place_hotend_cap (options)
     place_effector_prong () {
@@ -155,8 +161,12 @@ module groovemount_cap_screwholes (options)
 
             cylinder (r = screw_orbit_r, h = 9999, center = true);
         }
-    }
 
+        if (effector_screw_orbit_r != undef)
+            translate ([effector_screw_orbit_r, 0, hotend_cap_thickness])
+            mirror (Z)
+            screwhole (size = 3, length = hotend_cap_thickness);
+    }
 }
 
 module groovemount_air_channel (options)
@@ -329,7 +339,7 @@ module groovemount_hotend_cap (options, effector)
             mcad_nut_hole (size = bowden_nut_size);
         }
 
-        groovemount_cap_screwholes (options);
+        groovemount_cap_screwholes (options, effector);
     }
 }
 
