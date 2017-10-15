@@ -360,4 +360,11 @@ if (mode == "preview") {
     rotate (180, Z)
     rotate (90, Y)
     groovemount_back (groovemount);
+
+    translate ([0, 60])
+    mirror (Z)
+    place_hotend_cap (groovemount)
+    mirror (Z)
+    render ()
+    groovemount_hotend_cap (groovemount, effector);
 }
