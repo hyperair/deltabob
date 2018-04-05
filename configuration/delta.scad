@@ -7,8 +7,9 @@ use <../lib/delta.scad>
 use <../lib/effector.scad>
 use <../lib/hotend.scad>
 use <../lib/groovemount.scad>
+use <../lib/probe.scad>
 
-/* include <carriage.scad> */
+include <carriage.scad>
 include <extrusions.scad>
 include <fans.scad>
 
@@ -110,6 +111,12 @@ deltabob = (
             magnet_h = 4
         ),
 
+        probe = Probe (
+            ball_thread_d = 4,
+            ring_h = 10,
+            ring_width = 10
+        ),
+
         e3dv5 = Hotend (
             sink_d = 25,
             sink_h = 31.8,
@@ -145,6 +152,7 @@ deltabob = (
         bottom_corner = corner_bottom,
         carriage = carriage,
         effector = effector,
+        probe = probe,
         hotend = e3dv5,
         groovemount = groovemount,
 

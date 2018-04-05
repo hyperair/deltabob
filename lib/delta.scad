@@ -12,6 +12,7 @@ function Delta (
 
     carriage,
     effector,
+    probe,
     hotend,
     groovemount,
     /*
@@ -33,6 +34,7 @@ function Delta (
 
     ["carriage", carriage],
     ["effector", effector],
+    ["probe", probe],
     ["hotend", hotend],
     ["groovemount", groovemount],
 
@@ -55,6 +57,7 @@ function delta_get_hinge_spacing (d) = dict_get (d, "hinge_spacing");
 
 function delta_get_carriage (d) = dict_get (d, "carriage");
 function delta_get_effector (d) = dict_get (d, "effector");
+function delta_get_probe (d) = dict_get (d, "probe");
 function delta_get_hotend (d) = dict_get (d, "hotend");
 function delta_get_groovemount (g) = dict_get (g, "groovemount");
 
