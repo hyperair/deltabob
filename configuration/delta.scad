@@ -12,6 +12,7 @@ use <../lib/probe.scad>
 include <carriage.scad>
 include <extrusions.scad>
 include <fans.scad>
+include <switch.scad>
 
 deltabob = (
     let (
@@ -114,7 +115,8 @@ deltabob = (
         probe = Probe (
             ball_thread_d = 4,
             ring_h = 10,
-            ring_width = 10
+            ring_width = 10,
+            switch = microswitch0606
         ),
 
         e3dv5 = Hotend (
