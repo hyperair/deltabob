@@ -1,3 +1,6 @@
-use <frame.scad>
+use <corner.scad>
+use <lib/delta.scad>
+include <configuration/delta.scad>
 
-top_corner ();
+
+corner_top (delta_get_top_corner (deltabob));

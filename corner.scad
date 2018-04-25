@@ -396,6 +396,3 @@ module corner_top (corner_top_options)
         }
     }
 }
-
-corner_top (delta_get_top_corner (deltabob));
-*corner_bottom (delta_get_bottom_corner (deltabob));
