@@ -270,6 +270,7 @@ module place_hotend_cap (options)
 
 module place_effector_prong ()
 {
+    rotate (60, Z)
     mcad_rotate_multiply (no = 3)
     children ();
 }
@@ -299,7 +300,7 @@ module groovemount_hotend_cap (options, effector)
                     circle (d = hotend_sink_d + wall_thickness * 2);
 
                     intersection () {
-                        mcad_rotate_multiply (no = 3, angle = 120)
+                        place_effector_prong ()
                         translate ([0, -hotend_cap_arm_width / 2])
                         square ([100, hotend_cap_arm_width]);
 
