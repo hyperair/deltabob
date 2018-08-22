@@ -6,7 +6,6 @@ include <MCAD/units/metric.scad>
 
 include <configuration/delta.scad>
 include <configuration/resolution.scad>
-include <MCAD/motors/stepper.scad>
 
 use <utils.scad>
 
@@ -304,95 +303,5 @@ module corner_blank (corner_blank_options)
             valign = "center",
             size = 8
         );
-    }
-}
-
-module corner_bottom_place_motor (corner_bottom_options)
-{
-    motor = corner_bottom_get_motor (corner_bottom_options);
-    width = motorWidth (motor);
-    blank = corner_bottom_get_blank (corner_bottom_options);
-    corner_height = corner_get_height (blank);
-
-    wall_thickness = corner_get_wall_thickness (blank);
-    motor_y = corner_get_cavity_width (blank) + wall_thickness * 2;
-
-    translate ([0, motor_y, corner_height - width / 2])
-    rotate (90, X)
-    children ();
-}
-
-module corner_bottom (corner_bottom_options)
-{
-    corner_blank_options = corner_bottom_get_blank (corner_bottom_options);
-
-    render ()
-    difference () {
-        corner_blank (corner_blank_options);
-
-        /* motor holes */
-        motor = corner_bottom_get_motor (corner_bottom_options);
-        screw_spacing = motorScrewSpacing (motor);
-        wall_thickness = corner_get_wall_thickness (corner_blank_options);
-
-        corner_bottom_place_motor (corner_bottom_options)
-        translate ([0, 0, -epsilon])
-        linear_extrude (height = wall_thickness + epsilon * 2) {
-            for (x = [-0.5, 0.5] * screw_spacing)
-                for (y = [-0.5, 0.5] * screw_spacing)
-                    translate ([x, y])
-                    mcad_polyhole (d = 3.3);
-
-            mcad_polyhole (d = lookup (NemaRoundExtrusionDiameter, motor));
-        }
-    }
-}
-
-module corner_top (corner_top_options)
-{
-    blank = corner_top_get_blank (corner_top_options);
-    height = corner_get_height (blank);
-    idler_pos = height / 2;
-    idler_axle_d = corner_top_get_idler_size (corner_top_options);
-    cavity_width = corner_get_cavity_width (blank);
-    wall_thickness = corner_get_wall_thickness (blank);
-
-    render ()
-    difference () {
-        union () {
-            corner_blank (blank);
-
-            /* support for end of idler axle */
-            h = 8;
-            d = idler_axle_d + wall_thickness * 2;
-            intersection () {
-                translate ([0, wall_thickness - epsilon, idler_pos])
-                rotate (-90, X)
-                filleted_cylinder (
-                    d1 = d + h * 2,
-                    d2 = d,
-                    h = h,
-                    fillet_r = 3,
-                    chamfer_r = 3
-                );
-
-                ccube ([1000, 1000, height], center = X + Y);
-            }
-        }
-
-        translate ([0, 0, idler_pos])
-        rotate (-90, X) {
-            /* screwhole */
-            echo (idler_axle_d);
-            translate ([0, 0, 1])
-            mcad_polyhole (
-                d = idler_axle_d + 0.3,
-                h = cavity_width + wall_thickness * 2 + epsilon
-            );
-
-            /* nut hole */
-            translate ([0, 0, wall_thickness + cavity_width - epsilon])
-            mcad_nut_hole (size = idler_axle_d);
-        }
     }
 }
