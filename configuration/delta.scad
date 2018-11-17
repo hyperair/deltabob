@@ -17,6 +17,7 @@ include <switch.scad>
 deltabob = (
     let (
         v_aluex = vslot2040,
+        v_aluex_clearance = 0.2,
         v_aluex_orientation = "circumferential",  // as opposed to radial
         h_aluex = tslot2040,
 
@@ -29,6 +30,7 @@ deltabob = (
         bottom_height = 100,
         corner_bottom = CornerBottom (
             v_aluex = v_aluex,
+            v_aluex_clearance = v_aluex_clearance,
             v_aluex_orientation = v_aluex_orientation,
 
             v_aluex_screwholes = [
@@ -49,6 +51,7 @@ deltabob = (
 
         corner_top = CornerTop (
             v_aluex = v_aluex,
+            v_aluex_clearance = v_aluex_clearance,
             v_aluex_orientation = v_aluex_orientation,
 
             v_aluex_screwholes = [10, 30],

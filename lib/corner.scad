@@ -3,6 +3,7 @@ use <dict.scad>
 
 function CornerBlank (
     v_aluex,
+    v_aluex_clearance,
     v_aluex_orientation,
 
     h_aluex,
@@ -18,6 +19,7 @@ function CornerBlank (
 ) =
 [
     ["v_aluex", v_aluex],
+    ["v_aluex_clearance", v_aluex_clearance],
     ["v_aluex_orientation", v_aluex_orientation],
 
     ["h_aluex", h_aluex],
@@ -34,6 +36,7 @@ function CornerBlank (
 
 
 function corner_get_v_aluex (c) = dict_get (c, "v_aluex");
+function corner_get_v_aluex_clearance (c) = dict_get (c, "v_aluex_clearance");
 function corner_get_v_aluex_orientation (c) =
 (
     dict_get (c, "v_aluex_orientation")
@@ -130,6 +133,7 @@ function corner_find_trapezoid_height (top, bottom) = (
 
 
 function CornerBottom (v_aluex,
+                       v_aluex_clearance,
                        v_aluex_orientation,
 
                        h_aluex,
@@ -143,6 +147,7 @@ function CornerBottom (v_aluex,
                        motor) =
 [
     ["corner_blank", CornerBlank (v_aluex = v_aluex,
+                                  v_aluex_clearance = v_aluex_clearance,
                                   v_aluex_orientation = v_aluex_orientation,
 
                                   h_aluex = h_aluex,
@@ -162,6 +167,7 @@ function corner_bottom_get_blank (c) = dict_get (c, "corner_blank");
 function corner_bottom_get_motor (c) = dict_get (c, "motor");
 
 function CornerTop (v_aluex,
+                    v_aluex_clearance,
                     v_aluex_orientation,
 
                     h_aluex,
@@ -174,6 +180,7 @@ function CornerTop (v_aluex,
                     idler_size) =
 [
     ["corner_blank", CornerBlank (v_aluex = v_aluex,
+                                  v_aluex_clearance = v_aluex_clearance,
                                   v_aluex_orientation = v_aluex_orientation,
 
                                   h_aluex = h_aluex,

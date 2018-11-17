@@ -24,7 +24,7 @@ module slot_interface_shape (type, h)
         square (size = [5, 1.75], center = true);
 }
 
-module place_slots (aluex, sides)
+module place_slots (aluex, sides, offset = 0)
 {
     size = aluex_size (aluex);
     slots = aluex_slots (aluex);
@@ -40,16 +40,16 @@ module place_slots (aluex, sides)
     left = len (search ("l", sides)) > 0;
     right = len (search ("r", sides)) > 0;
 
-    translate ([xlen, ylen] / -2) {
+    translate (-[xlen, ylen] / 2) {
         for (xslot = xslots) {
             /* bottom slots */
             if (down)
-            translate ([xslot, 0])
+            translate ([xslot, -offset])
             children ();
 
             /* top slots */
             if (up)
-            translate ([0, ylen])
+            translate ([0, ylen + offset])
             mirror (Y)
             translate ([xslot, 0])
             children ();
@@ -57,12 +57,12 @@ module place_slots (aluex, sides)
 
         for (yslot = yslots) {
             if (left)
-            translate ([0, yslot])
+            translate ([-offset, yslot])
             rotate (-90, Z)
             children ();
 
             if (right)
-            translate ([xlen, 0])
+            translate ([xlen + offset, 0])
             mirror (X)
             translate ([0, yslot])
             rotate (-90, Z)
@@ -71,11 +71,12 @@ module place_slots (aluex, sides)
     }
 }
 
-module aluex_slot_interface (aluex, h, slot_sides = "udlr")
+module aluex_slot_interface (aluex, h, slot_sides = "udlr", offset = 0)
 {
     place_slots (
         aluex = aluex,
-        sides = slot_sides
+        sides = slot_sides,
+        offset = offset
     )
     slot_interface_shape (type = aluex_slot_profile (aluex), h = h);
 }
@@ -154,6 +155,8 @@ module corner_shape (corner_options)
     v_aluex = corner_get_v_aluex (corner_options);
     v_size = aluex_size (v_aluex);
 
+    v_clearance = corner_get_v_aluex_clearance (corner_options);
+
     wall_thickness = corner_get_wall_thickness (corner_options);
 
     h_profile = aluex_size (h_aluex);
@@ -188,7 +191,7 @@ module corner_shape (corner_options)
 
         /* v extrusion */
         corner_place_v_aluex (corner_options)
-        square (v_profile, center = true);
+        square (v_profile + [1, 1] * v_clearance, center = true);
 
         /* h extrusions */
         corner_place_h_aluex_xy (corner_options)
@@ -233,13 +236,14 @@ module corner_blank (corner_blank_options)
     v_aluex = corner_get_v_aluex (corner_blank_options);
     height = corner_get_height (corner_blank_options);
 
+    v_aluex_clearance = corner_get_v_aluex_clearance (corner_blank_options);
+
     v_circumferential = corner_get_v_aluex_circumferential (
         corner_blank_options
     );
     v_radial = corner_get_v_aluex_radial (
         corner_blank_options
     );
-
 
     wall_thickness = corner_get_wall_thickness (corner_blank_options);
 
@@ -256,7 +260,7 @@ module corner_blank (corner_blank_options)
             /* v slot interface */
             corner_place_v_aluex (corner_blank_options)
             aluex_slot_interface (corner_get_v_aluex (corner_blank_options),
-                                  height);
+                                  height, offset = v_aluex_clearance);
 
             /* h slot interface */
             corner_place_h_aluex (corner_blank_options)
