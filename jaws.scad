@@ -1,5 +1,5 @@
-use <MCAD/array/along_curve.scad>
-use <MCAD/shapes/2Dshapes.scad>
+use <MCAD/array/rectangular.scad>
+use <MCAD/shapes/3Dshapes.scad>
 use <MCAD/shapes/polyhole.scad>
 include <MCAD/units/metric.scad>
 
