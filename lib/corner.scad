@@ -10,8 +10,8 @@ function CornerBlank (
     h_aluex_num,
     h_aluex_separation,
 
-    v_screwhole_positions,
-    h_screwholes_positions,
+    v_aluex_screwholes,
+    h_aluex_screwholes,
 
     wall_thickness,
     cavity_width,
@@ -135,10 +135,12 @@ function corner_find_trapezoid_height (top, bottom) = (
 function CornerBottom (v_aluex,
                        v_aluex_clearance,
                        v_aluex_orientation,
+                       v_aluex_screwholes,
 
                        h_aluex,
                        h_aluex_num,
                        h_aluex_separation,
+                       h_aluex_screwholes,
 
                        wall_thickness,
                        cavity_width,
@@ -169,10 +171,12 @@ function corner_bottom_get_motor (c) = dict_get (c, "motor");
 function CornerTop (v_aluex,
                     v_aluex_clearance,
                     v_aluex_orientation,
+                    v_aluex_screwholes,
 
                     h_aluex,
                     h_aluex_num,
                     h_aluex_separation,
+                    h_aluex_screwholes,
 
                     wall_thickness,
                     cavity_width,
