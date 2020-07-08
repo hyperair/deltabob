@@ -1,6 +1,8 @@
 use <MCAD/array/along_curve.scad>
+use <MCAD/array/rectangular.scad>
 use <MCAD/fasteners/nuts_and_bolts.scad>
 use <MCAD/shapes/2Dshapes.scad>
+use <MCAD/shapes/3Dshapes.scad>
 include <MCAD/units/metric.scad>
 
 include <configuration/delta.scad>
