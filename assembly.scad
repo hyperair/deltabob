@@ -99,7 +99,7 @@ module place_plate (delta)
 module plate (delta)
 {
     place_plate (delta)
-    color ("lightgray")
+    color ("lightgray", 0.25)
     cylinder (d = 240, h = 5);
 }
 
