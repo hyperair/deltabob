@@ -1,5 +1,6 @@
 use <dict.scad>
 use <corner.scad>
+use <aluex.scad>
 
 function Delta (
     v_aluex,
@@ -66,6 +67,15 @@ function delta_get_v_circumferential (d) =
     let (orientation = delta_get_v_aluex_orientation (d),
          v_profile = aluex_size (delta_get_v_aluex (d)),
          idx = (orientation == "circumferential" ? 1 : 0))
+
+    v_profile[idx]
+);
+
+function delta_get_v_radial (d) =
+(
+    let (orientation = delta_get_v_aluex_orientation (d),
+         v_profile = aluex_size (delta_get_v_aluex (d)),
+         idx = (orientation == "circumferential" ? 0 : 1))
 
     v_profile[idx]
 );

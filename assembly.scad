@@ -73,17 +73,13 @@ module vertical_struts (delta)
     v_aluex = delta_get_v_aluex (delta);
     v_orientation = delta_get_v_aluex_orientation (delta);
 
-    v_profile = (
-        let (size = aluex_size (v_aluex))
-
-        (v_orientation == "circumferential") ?
-        [size[1], size[0]] : [size[0], size[1]]
-    );
+    v_circ = delta_get_v_circumferential (delta);
+    v_radial = delta_get_v_radial (delta);
 
     place_vertical_struts (delta)
     mirror (Y)
     color ("black")
-    ccube ([v_profile[0], v_profile[1], frame_height], center = X);
+    ccube ([v_circ, v_radial, frame_height], center = X);
 }
 
 module place_plate (delta)
