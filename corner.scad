@@ -126,6 +126,7 @@ module aluex_screwhole (aluex, h, h_capscrew)
         mcad_polyhole (d = 8.8, h = h_capscrew);
 
     /* relief for tnut */
+    translate ([0, 0, -epsilon]) // HACK: openscad cgal assertion error
     mirror (Z)
     ccube ([20, 15, 5], center = X + Y);
 }
