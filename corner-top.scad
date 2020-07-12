@@ -1,5 +1,6 @@
 use <MCAD/fasteners/nuts_and_bolts.scad>
 use <MCAD/shapes/2Dshapes.scad>
+use <MCAD/shapes/3Dshapes.scad>
 use <MCAD/shapes/polyhole.scad>
 
 include <MCAD/units/metric.scad>

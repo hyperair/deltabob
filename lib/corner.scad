@@ -131,6 +131,20 @@ function corner_find_trapezoid_height (top, bottom) = (
     (bottom - top) / 2 * tan(60)
 );
 
+function corner_get_h_aluex_positions (c) = (
+    let (
+        height = corner_get_height (c),
+        h_height = corner_get_h_aluex_height (c),
+        num = corner_get_h_aluex_num (c),
+        separation = corner_get_h_aluex_separation (c)
+    )
+
+    [
+        for (i = [0:num-1])
+            h_height / 2 + (separation + h_height) * i
+    ]
+);
+
 
 function CornerBottom (v_aluex,
                        v_aluex_clearance,

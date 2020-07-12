@@ -1,6 +1,7 @@
 use <MCAD/array/mirror.scad>
 use <MCAD/fasteners/nuts_and_bolts.scad>
 use <MCAD/shapes/2Dshapes.scad>
+use <MCAD/shapes/3Dshapes.scad>
 use <MCAD/shapes/polyhole.scad>
 include <MCAD/units/metric.scad>
 
@@ -131,14 +132,7 @@ module aluex_screwhole (aluex, h, h_capscrew)
 
 module corner_place_h_aluex (corner_blank)
 {
-    height = corner_get_height (corner_blank);
-    h_height = corner_get_h_aluex_height (corner_blank);
-    num = corner_get_h_aluex_num (corner_blank);
-    separation = corner_get_h_aluex_separation (corner_blank);
-    h_aluex_positions = [
-        for (i = [0:num-1])
-            h_height / 2 + (separation + h_height) * i
-    ];
+    h_aluex_positions = corner_get_h_aluex_positions (corner_blank);
 
     for (h_aluex_pos = h_aluex_positions)
         translate ([0, 0, h_aluex_pos])
@@ -221,7 +215,7 @@ module corner_shape (corner_options)
         );
 
         /* crop the size of the arms */
-        mcad_mirror_duplicate ()
+        mcad_mirror_duplicate (X)
         translate ([(v_circumferential / 2 + wall_thickness - epsilon), 0])
         rotate (-30)
         translate ([-corner_get_diagonal_wall_thickness (corner_options),

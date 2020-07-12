@@ -1,6 +1,8 @@
 use <dict.scad>
 use <corner.scad>
 use <aluex.scad>
+use <carriage.scad>
+use <effector.scad>
 
 function Delta (
     v_aluex,
@@ -78,4 +80,22 @@ function delta_get_v_radial (d) =
          idx = (orientation == "circumferential" ? 0 : 1))
 
     v_profile[idx]
+);
+
+function delta_get_corner_offset (d) =
+(
+    let (delta_radius = delta_get_delta_radius (d),
+         effector_radius = effector_get_hinge_offset (
+             delta_get_effector (d)
+         ),
+
+         carriage = delta_get_carriage (d),
+         carriage_hinge_offset = (
+             carriage_get_base_thickness (carriage) +
+             carriage_get_hinge_elevation (carriage) +
+             1
+         )
+    )
+
+    effector_radius + delta_radius + carriage_hinge_offset
 );

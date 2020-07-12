@@ -21,17 +21,7 @@ module top_corner ()
 
 module place_corners (delta)
 {
-    delta_radius = delta_get_delta_radius (delta);
-    effector_radius = effector_get_hinge_offset (delta_get_effector (delta));
-
-    carriage = delta_get_carriage (delta);
-    carriage_hinge_offset = (
-        carriage_get_base_thickness (carriage) +
-        carriage_get_hinge_elevation (carriage) +
-        1
-    );
-
-    corner_offset = effector_radius + delta_radius + carriage_hinge_offset;
+    corner_offset = delta_get_corner_offset (delta);
 
     mcad_rotate_multiply (3)
     translate ([0, -corner_offset])
@@ -44,13 +34,85 @@ module top_triangle (delta)
     corner_blank = corner_top_get_blank (corner_top);
     corner_top_height = corner_get_height (corner_blank);
 
-    translate ([0, 0, frame_height - corner_top_height])
-    place_corners (delta)
-    top_corner ();
+    translate ([0, 0, frame_height - corner_top_height]) {
+        place_corners (delta)
+        top_corner ();
+
+        place_horizontal_struts (delta)
+        top_struts (delta);
+    }
 }
+
+module top_struts (delta)
+{
+    length = (triangle_radius (delta) * cos (30) - short_edge (delta)) * 2;
+
+    corner_top = delta_get_top_corner (delta);
+    corner = corner_top_get_blank (corner_top);
+    h_aluex_positions = corner_get_h_aluex_positions (corner);
+
+    aluex_width = corner_get_h_aluex_width (corner);
+    aluex_height = corner_get_h_aluex_height (corner);
+
+    echo (str ("Horizontal strut length = ", length));
+
+    color ("black")
+    for (z = h_aluex_positions) {
+        translate ([0, 0, z])
+        ccube ([length, aluex_width, aluex_height], center = X + Z);
+    }
+}
+
+function short_edge (delta) = (
+    let (corner_bottom = delta_get_bottom_corner (delta),
+         corner_blank = corner_bottom_get_blank (corner_bottom),
+
+         v_circ = delta_get_v_circumferential (delta),
+         wall_thickness = corner_get_wall_thickness (corner_blank)
+    )
+
+    v_circ + wall_thickness * 2
+);
+
+function small_triangle_height (delta) = (
+    let (short_edge = short_edge (delta))
+
+    sqrt (pow (short_edge, 2) - pow (short_edge / 2, 2))
+);
+
+function triangle_radius (delta) = (
+    delta_get_corner_offset (delta) + small_triangle_height (delta)
+);
 
 module place_horizontal_struts (delta)
 {
+    /* main delta base triangle */
+    triangle_radius = triangle_radius (delta);
+    horizontal_strut_offset = sin (30) * triangle_radius;
+
+    mcad_rotate_multiply (3)
+    translate ([0, horizontal_strut_offset, 0])
+    children ();
+}
+
+module bottom_struts (delta)
+{
+    length = (triangle_radius (delta) * cos (30) - short_edge (delta)) * 2;
+
+    corner_bottom = delta_get_bottom_corner (delta);
+    corner = corner_bottom_get_blank (corner_bottom);
+    h_aluex_positions = corner_get_h_aluex_positions (corner);
+
+    aluex_width = corner_get_h_aluex_width (corner);
+    aluex_height = corner_get_h_aluex_height (corner);
+
+    echo (str ("Horizontal strut length = ", length));
+
+    color ("black")
+    for (z = h_aluex_positions) {
+        translate ([0, 0, z])
+        ccube ([length, aluex_width, aluex_height], center = X + Z);
+    }
 }
 
 module place_vertical_struts (delta)
@@ -64,8 +126,8 @@ module bottom_triangle (delta)
     place_corners (delta)
     bottom_corner ();
 
-    place_horizontal_struts ()
-    bottom_struts ();
+    place_horizontal_struts (delta)
+    bottom_struts (delta);
 }
 
 module vertical_struts (delta)
@@ -75,6 +137,8 @@ module vertical_struts (delta)
 
     v_circ = delta_get_v_circumferential (delta);
     v_radial = delta_get_v_radial (delta);
+
+    echo (str ("Vertical strut length = ", frame_height));
 
     place_vertical_struts (delta)
     mirror (Y)
