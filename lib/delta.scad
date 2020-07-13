@@ -99,3 +99,15 @@ function delta_get_corner_offset (d) =
 
     effector_radius + delta_radius + carriage_hinge_offset
 );
+
+/* this is the edge that forms from truncating the base triangle */
+function delta_get_base_short_edge (d) = (
+    let (corner_bottom = delta_get_bottom_corner (d),
+         corner_blank = corner_bottom_get_blank (corner_bottom),
+
+         v_circ = delta_get_v_circumferential (d),
+         wall_thickness = corner_get_wall_thickness (corner_blank)
+    )
+
+    v_circ + wall_thickness * 2
+);

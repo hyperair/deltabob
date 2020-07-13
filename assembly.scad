@@ -45,7 +45,7 @@ module top_triangle (delta)
 
 module top_struts (delta)
 {
-    length = (triangle_radius (delta) * cos (30) - short_edge (delta)) * 2;
+    length = (triangle_radius (delta) * cos (30) - delta_get_base_short_edge (delta)) * 2;
 
     corner_top = delta_get_top_corner (delta);
     corner = corner_top_get_blank (corner_top);
@@ -63,19 +63,8 @@ module top_struts (delta)
     }
 }
 
-function short_edge (delta) = (
-    let (corner_bottom = delta_get_bottom_corner (delta),
-         corner_blank = corner_bottom_get_blank (corner_bottom),
-
-         v_circ = delta_get_v_circumferential (delta),
-         wall_thickness = corner_get_wall_thickness (corner_blank)
-    )
-
-    v_circ + wall_thickness * 2
-);
-
 function small_triangle_height (delta) = (
-    let (short_edge = short_edge (delta))
+    let (short_edge = delta_get_base_short_edge (delta))
 
     sqrt (pow (short_edge, 2) - pow (short_edge / 2, 2))
 );
@@ -97,7 +86,10 @@ module place_horizontal_struts (delta)
 
 module bottom_struts (delta)
 {
-    length = (triangle_radius (delta) * cos (30) - short_edge (delta)) * 2;
+    triangle_radius = triangle_radius (delta);
+    short_edge = delta_get_base_short_edge (delta);
+
+    length = (triangle_radius * cos (30) - short_edge) * 2;
 
     corner_bottom = delta_get_bottom_corner (delta);
     corner = corner_bottom_get_blank (corner_bottom);
