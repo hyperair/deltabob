@@ -6,16 +6,18 @@ use <lib/corner.scad>
 include <configuration/delta.scad>
 
 frame_height = 1000;
+corner_colour = "#333";
+aluex_colour = "silver";
 
 module bottom_corner ()
 {
-    color ("gray")
+    color (corner_colour)
     import ("corner-bottom.stl");
 }
 
 module top_corner ()
 {
-    color ("gray")
+    color (corner_colour)
     import ("corner-top.stl");
 }
 
@@ -56,7 +58,7 @@ module top_struts (delta)
 
     echo (str ("Horizontal strut length = ", length));
 
-    color ("black")
+    color (aluex_colour)
     for (z = h_aluex_positions) {
         translate ([0, 0, z])
         ccube ([length, aluex_width, aluex_height], center = X + Z);
@@ -100,7 +102,7 @@ module bottom_struts (delta)
 
     echo (str ("Horizontal strut length = ", length));
 
-    color ("black")
+    color (aluex_colour)
     for (z = h_aluex_positions) {
         translate ([0, 0, z])
         ccube ([length, aluex_width, aluex_height], center = X + Z);
@@ -134,7 +136,7 @@ module vertical_struts (delta)
 
     place_vertical_struts (delta)
     mirror (Y)
-    color ("black")
+    color (aluex_colour)
     ccube ([v_circ, v_radial, frame_height], center = X);
 }
 
