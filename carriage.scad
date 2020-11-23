@@ -1,7 +1,7 @@
 use <MCAD/array/mirror.scad>
 use <MCAD/fasteners/nuts_and_bolts.scad>
 use <MCAD/shapes/2Dshapes.scad>
-use <MCAD/shapes/boxes.scad>
+use <MCAD/shapes/3Dshapes.scad>
 use <MCAD/shapes/polyhole.scad>
 include <MCAD/units/metric.scad>
 use <lib/fillet.scad>
@@ -28,7 +28,7 @@ module carriage_base (options)
 
     difference () {
         translate ([0, 0, thickness / 2])
-        mcad_rounded_box ([width, length, thickness],
+        mcad_rounded_cube ([width, length, thickness],
                           radius = eccentric_od + wall_thickness,
                           sidesonly = true,
                           center = true);
@@ -214,7 +214,6 @@ module carriage (options)
     /* hinges */
     hinge_spacing = carriage_get_hinge_spacing (options);
     hinge_elevation = carriage_get_hinge_elevation (options);
-    thickness = carriage_get_base_thickness (options);
 
     mcad_mirror_duplicate (X)
     translate ([hinge_spacing / 2, 0, thickness + hinge_elevation])
@@ -255,69 +254,6 @@ module carriage (options)
                  - belt_clamp_length),
                 100],
                center = X + Y);
-    }
-}
-
-module carriage_proto (options)
-{
-    wall_thickness = carriage_get_wall_thickness (options);
-    wheel_spacing = carriage_get_wheel_spacing (options);
-
-    eccentric_od = carriage_get_eccentric_od (options);
-
-    length = carriage_get_carriage_length (options);
-    width = wheel_spacing + eccentric_od + wall_thickness * 2;
-    thickness = carriage_get_base_thickness (options);
-
-    hinge_spacing = carriage_get_hinge_spacing (options);
-
-    /* base shape */
-    difference () {
-        translate ([0, 0, thickness / 2])
-        mcad_rounded_box ([width, length, thickness],
-                          radius = eccentric_od / 2 + wall_thickness,
-                          sidesonly = true,
-                          center = true);
-
-        for (x = [-1, 1] * wheel_spacing / 2)
-        for (y = [-1, 1] * ((length - eccentric_od) / 2 - wall_thickness))
-        translate ([x, y, 0])
-        mcad_polyhole (d = eccentric_od + clearance,
-                       h = (thickness + epsilon) * 2,
-                       center = true);
-    }
-
-    /* hinge block */
-    difference () {
-        block_width = 15;
-        hinge_d = 10;
-        belt_offset = 10.55 / 2;
-
-        translate ([width / 2, 0, thickness])
-        rotate (-90, Y)
-        rotate (45, Z)
-        difference () {
-            translate ([-0.5, -0.5] * block_width)
-            cube ([block_width, block_width, width]);
-
-            for (z = [1, -1])
-            translate ([0,
-                        - block_width * 0.5 - hinge_d * 0.1,
-                        length / 2 + z * hinge_spacing / 2])
-            sphere (d = hinge_d);
-        }
-
-        /* flatten the bottom */
-        mirror (Z)
-        ccube ([width + epsilon * 2, length, thickness * 2], center = X + Y);
-
-        /* open up belt channels */
-        translate ([-belt_offset, 0])
-        ccube ([5, length, thickness * 3], center = X + Y);
-
-        translate ([0, 0, thickness + 5])
-        rotate (90, X)
-        cylinder (d = 2, h = length, center = true);
     }
 }
 
