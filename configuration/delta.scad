@@ -109,7 +109,7 @@ deltabob = (
             thickness = 5,
 
             prong_width = 15,
-            prong_height = 40,
+            prong_height = 55,
 
             magnet_d = 8.3,
             magnet_h = 4
