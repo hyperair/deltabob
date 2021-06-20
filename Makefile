@@ -1,4 +1,4 @@
->INKSCAPEDIR = /usr/share/inkscape/extensions/
+INKSCAPEDIR = /usr/share/inkscape/extensions/
 DXF_OUTLINES = $(INKSCAPEDIR)/dxf_outlines.py
 OPENSCAD = openscad
 
@@ -33,6 +33,9 @@ all: $(STLFILES)
 
 %.stl: %.scad
 	$(OPENSCAD) -d $<deps -m $(MAKE) -o $@ $<
+
+assembly/groovemount-assembly.stl: groovemount.scad
+	$(OPENSCAD) -Dmode='"preview"' -d $<deps -m $(MAKE) -o $@ $<
 
 clean:
 	rm $(STLFILES) $(DEPFILES)
