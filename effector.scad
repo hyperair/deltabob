@@ -262,7 +262,7 @@ module effector (opts)
 
         /* center cavity */
         translate ([0, 0, -epsilon])
-        cylinder (d = cavity_d, h = thickness + epsilon * 2);
+        cylinder (d = cavity_d, h = thickness + epsilon * 4);
 
         /* hinge balls */
         effector_all_hinges (opts, mode = "ball");
