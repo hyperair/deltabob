@@ -1,4 +1,4 @@
-use <MCAD/array/along_curve.scad>
+use <MCAD/array/rectangular.scad>
 use <MCAD/array/mirror.scad>
 use <MCAD/fasteners/nuts_and_bolts.scad>
 use <MCAD/fasteners/threads.scad>
