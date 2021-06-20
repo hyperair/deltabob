@@ -348,10 +348,10 @@ groovemount = delta_get_groovemount (deltabob);
 effector = delta_get_effector (deltabob);
 
 if (mode == "preview") {
-    groovemount_base_shape (groovemount);
-
-    render ()
-    groovemount_hotend_cap (groovemount, effector);
+    union() {
+        groovemount_base_shape (groovemount);
+        groovemount_hotend_cap (groovemount, effector);
+    }
 } else {
     rotate (-90, Y)
     groovemount_front (groovemount);
