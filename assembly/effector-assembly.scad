@@ -1,14 +1,20 @@
+include <../configuration/delta.scad>
+use <../lib/delta.scad>
+use <../lib/hotend.scad>
 use <MCAD/shapes/3Dshapes.scad>
 
 $fs = 0.4;
 $fa = 1;
 
-module effector_assembly()
+module effector_assembly(hotend, effector)
 {
+    hotend_whole_sink_h = hotend_get_whole_sink_h (hotend);
+    effector_prong_height = effector_get_prong_height (effector);
+
     import ("../effector.stl");
 
     rotate ([0, 0, -30 + 180])
-    translate ([0, 0, 5])
+    translate ([0, 0, -hotend_whole_sink_h + effector_prong_height])
     union () {
         import ("groovemount-assembly.stl");
 
@@ -22,4 +28,6 @@ module effector_assembly()
     }
 }
 
-effector_assembly();
+hotend = delta_get_hotend (deltabob);
+effector = delta_get_effector (deltabob);
+effector_assembly (hotend, effector);
