@@ -8,7 +8,7 @@ use <MCAD/shapes/polyhole.scad>
 use <lib/fillet.scad>
 
 include <MCAD/units/metric.scad>
-include <e3dv5.scad>
+include <vitamins/e3dv5.scad>
 
 fan_screw_distance = 33;
 fan_width = 40;

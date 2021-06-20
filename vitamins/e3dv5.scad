@@ -1,6 +1,6 @@
-use <MCAD/shapes/2Dshapes.scad>
+use <MCAD/shapes/3Dshapes.scad>
 include <MCAD/units/metric.scad>
-use <utils.scad>
+use <../utils.scad>
 
 $fs = 0.4;
 $fa = 1;

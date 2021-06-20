@@ -1,6 +1,6 @@
 use <MCAD/shapes/polyhole.scad>
 include <MCAD/units/metric.scad>
-include <e3dv5.scad>
+include <vitamins/e3dv5.scad>
 
 effector_duct_d = 8;
 effector_ring_d = 60;
