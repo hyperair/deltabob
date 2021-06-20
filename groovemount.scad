@@ -1,9 +1,9 @@
 use <MCAD/array/along_curve.scad>
 use <MCAD/array/mirror.scad>
+use <MCAD/array/rectangular.scad>
 use <MCAD/fasteners/nuts_and_bolts.scad>
 use <MCAD/fasteners/threads.scad>
-use <MCAD/shapes/2Dshapes.scad>
-use <MCAD/shapes/boxes.scad>
+use <MCAD/shapes/3Dshapes.scad>
 include <MCAD/units/metric.scad>
 
 use <lib/fillet.scad>
@@ -212,8 +212,8 @@ module groovemount_fan_inset (options)
 
     place_fan (options)
     translate ([0, 0, thickness / 2])
-    mcad_rounded_box ([width, width, thickness], radius = radius,
-                      sidesonly = true, center = true);
+    mcad_rounded_cube ([width, width, thickness], radius = radius,
+                       sidesonly = true, center = true);
 }
 
 module groovemount_base_shape (options)
