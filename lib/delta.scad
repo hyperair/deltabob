@@ -26,6 +26,9 @@ function Delta (
     delta_radius,
     rod_length,
     hinge_spacing,
+
+    plate_thickness,
+    print_colour
 ) =
 [
     ["v_aluex", v_aluex],
@@ -44,6 +47,9 @@ function Delta (
     ["delta_radius", delta_radius],
     ["rod_length", rod_length],
     ["hinge_spacing", hinge_spacing],
+
+    ["plate_thickness", plate_thickness],
+    ["print_colour", print_colour]
 ];
 
 function delta_get_v_aluex (d) = dict_get (d, "v_aluex");
@@ -54,15 +60,18 @@ function delta_get_v_aluex_orientation (d) = dict_get (d, "v_aluex_orientation")
 function delta_get_top_corner (d) = dict_get (d, "top_corner");
 function delta_get_bottom_corner (d) = dict_get (d, "bottom_corner");
 
-function delta_get_delta_radius (d) = dict_get (d, "delta_radius");
-function delta_get_rod_length (d) = dict_get (d, "rod_length");
-function delta_get_hinge_spacing (d) = dict_get (d, "hinge_spacing");
-
 function delta_get_carriage (d) = dict_get (d, "carriage");
 function delta_get_effector (d) = dict_get (d, "effector");
 function delta_get_probe (d) = dict_get (d, "probe");
 function delta_get_hotend (d) = dict_get (d, "hotend");
 function delta_get_groovemount (g) = dict_get (g, "groovemount");
+
+function delta_get_delta_radius (d) = dict_get (d, "delta_radius");
+function delta_get_rod_length (d) = dict_get (d, "rod_length");
+function delta_get_hinge_spacing (d) = dict_get (d, "hinge_spacing");
+
+function delta_get_plate_thickness (d) = dict_get (d, "plate_thickness");
+function delta_get_print_colour (d) = dict_get (d, "print_colour");
 
 function delta_get_v_circumferential (d) =
 (

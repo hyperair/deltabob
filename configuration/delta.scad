@@ -163,6 +163,9 @@ deltabob = (
 
         delta_radius = 240 / 2,
         rod_length = 138.5,
-        hinge_spacing = 50
+        hinge_spacing = 50,
+
+        plate_thickness = 5,
+        print_colour = "#333"
     )
 );

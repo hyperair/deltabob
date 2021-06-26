@@ -5,19 +5,20 @@ use <lib/effector.scad>
 use <lib/corner.scad>
 include <configuration/delta.scad>
 
+use <assembly/effector-assembly.scad>
+
 frame_height = 1000;
-corner_colour = "#333";
 aluex_colour = "silver";
 
-module bottom_corner ()
+module bottom_corner (delta)
 {
-    color (corner_colour)
+    color (delta_get_print_colour (delta))
     import ("corner-bottom.stl");
 }
 
-module top_corner ()
+module top_corner (delta)
 {
-    color (corner_colour)
+    color (delta_get_print_colour (delta))
     import ("corner-top.stl");
 }
 
@@ -38,7 +39,7 @@ module top_triangle (delta)
 
     translate ([0, 0, frame_height - corner_top_height]) {
         place_corners (delta)
-        top_corner ();
+        top_corner (delta);
 
         place_horizontal_struts (delta)
         top_struts (delta);
@@ -118,7 +119,7 @@ module place_vertical_struts (delta)
 module bottom_triangle (delta)
 {
     place_corners (delta)
-    bottom_corner ();
+    bottom_corner (delta);
 
     place_horizontal_struts (delta)
     bottom_struts (delta);
@@ -152,9 +153,20 @@ module place_plate (delta)
 
 module plate (delta)
 {
+    plate_thickness = delta_get_plate_thickness (delta);
+
     place_plate (delta)
     color ("lightgray", 0.25)
-    cylinder (d = 240, h = 5);
+    cylinder (d = 240, h = plate_thickness);
+}
+
+module place_effector_assembly (delta)
+{
+    plate_thickness = delta_get_plate_thickness (delta);
+
+    place_plate (delta)
+    translate ([0, 0, plate_thickness])
+    children ();
 }
 
 module deltabob (delta)
@@ -164,7 +176,10 @@ module deltabob (delta)
     vertical_struts (delta);
 
     plate (delta);
-    /* effector (); */
+
+    place_effector_assembly (delta)
+    effector_assembly (delta);
+
     /* carriages (); */
     /* rods (); */
 }

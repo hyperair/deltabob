@@ -6,17 +6,24 @@ use <MCAD/shapes/3Dshapes.scad>
 $fs = 0.4;
 $fa = 1;
 
-module effector_assembly(hotend, effector)
+module effector_assembly(delta)
 {
+    hotend = delta_get_hotend (deltabob);
     hotend_whole_sink_h = hotend_get_whole_sink_h (hotend);
+
+    effector = delta_get_effector (deltabob);
     effector_prong_height = effector_get_prong_height (effector);
 
+    print_colour = delta_get_print_colour (delta);
+
     translate ([0, 0, 14.1]) {
+        color (print_colour)
         import ("../effector.stl");
 
         rotate ([0, 0, -30 + 180])
         translate ([0, 0, -hotend_whole_sink_h + effector_prong_height])
         union () {
+            color (print_colour)
             import ("groovemount-assembly.stl");
 
             /* fan */
@@ -30,6 +37,4 @@ module effector_assembly(hotend, effector)
     }
 }
 
-hotend = delta_get_hotend (deltabob);
-effector = delta_get_effector (deltabob);
-effector_assembly (hotend, effector);
+effector_assembly (delta);
