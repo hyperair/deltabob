@@ -1,5 +1,6 @@
 use <MCAD/shapes/2Dshapes.scad>
-use <MCAD/shapes/triangles.scad>
+use <MCAD/shapes/3Dshapes.scad>
+use <MCAD/shapes/triangles_pyramids.scad>
 
 use <lib/delta.scad>
 use <lib/probe.scad>
