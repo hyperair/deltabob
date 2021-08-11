@@ -1,9 +1,8 @@
-use <MCAD/array/along_curve.scad>
+use <MCAD/array/rectangular.scad>
 use <MCAD/array/mirror.scad>
 use <MCAD/fasteners/nuts_and_bolts.scad>
 use <MCAD/shapes/cylinder.scad>
-use <MCAD/shapes/boxes.scad>
-use <MCAD/shapes/2Dshapes.scad>
+use <MCAD/shapes/3Dshapes.scad>
 use <MCAD/shapes/polyhole.scad>
 
 include <MCAD/units/metric.scad>
@@ -81,7 +80,7 @@ module retractable_body ()
 
     difference () {
         translate ([retractable_rounding_r, 0, retractable_height / 2])
-        mcad_rounded_box (
+        mcad_rounded_cube (
             size = [retractable_depth + retractable_rounding_r * 2,
                 retractable_width, retractable_height],
             radius = retractable_rounding_r,
