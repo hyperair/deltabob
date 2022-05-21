@@ -19,7 +19,7 @@ deltabob = (
         v_aluex = vslot2040,
         v_aluex_clearance = 0.2,
         v_aluex_orientation = "circumferential",  // as opposed to radial
-        h_aluex = tslot2040,
+        h_aluex = vslot2040,
 
         h_aluex_screwholes = [15, 60],
 
