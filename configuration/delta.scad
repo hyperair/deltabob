@@ -161,11 +161,11 @@ deltabob = (
         hotend = e3dv5,
         groovemount = groovemount,
 
-        delta_radius = 240 / 2,
+        delta_radius = 263.278 / 2,  // tweaked for 300mm horizontal extrusions
         rod_length = 138.5,
         hinge_spacing = 50,
 
         plate_thickness = 5,
-        print_colour = "#333"
+        print_colour = "#223cb0"
     )
 );
