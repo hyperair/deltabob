@@ -86,7 +86,7 @@ module filleted_cylinder (
     fillet_r = 0, chamfer_r = 0
 )
 {
-    r = (r == undef) ? d / 2 : r;
+    r = (r == undef && d != undef) ? d / 2 : r;
 
     function get_r (_r, _d) =
     (
