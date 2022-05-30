@@ -29,6 +29,7 @@ module effector_assembly(delta)
             /* fan */
             %translate ([25, 0, 21])
              rotate ([0, -90, 0])
+             color("#333")
              mcad_rounded_cube ([40, 40, 10], radius=3, sidesonly=true, center=true);
 
             %translate ([0, 0, -19])

@@ -7,8 +7,8 @@ include <configuration/delta.scad>
 
 use <assembly/effector-assembly.scad>
 
-frame_height = 1000;
-aluex_colour = "silver";
+frame_height = 800;
+aluex_colour = "#333";
 
 module bottom_corner (delta)
 {
