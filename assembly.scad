@@ -185,3 +185,9 @@ module deltabob (delta)
 }
 
 deltabob (deltabob);
+
+/* power supply */
+translate ([40, 162, 0])
+rotate (90, Z)
+color ("#aaa")
+ccube ([50, 215, 112], center=X+Y);
