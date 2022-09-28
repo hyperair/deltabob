@@ -4,7 +4,7 @@ use <MCAD/shapes/polyhole.scad>
 $fs = 0.4;
 $fa = 1;
 
-rod_d = 9.8;
+rod_d = 6;
 rod_depth = rod_d * 2;
 wall_thickness = 2;
 
@@ -37,9 +37,8 @@ module ball_end ()
                            epsilon * 2);
 
             /* caphead hole */
-            translate ([0, 0, rod_depth - epsilon])
             mcad_polyhole (d = screwhead_size + clearance,
-                           h = screwhead_thickness + epsilon);
+                           h = rod_depth + screwhead_thickness + epsilon);
 
             /* rod depth */
             mcad_polyhole (d = rod_d,
