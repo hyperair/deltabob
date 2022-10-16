@@ -1,5 +1,5 @@
 use <MCAD/array/mirror.scad>
-use <MCAD/shapes/2Dshapes.scad>
+use <MCAD/shapes/3Dshapes.scad>
 use <MCAD/shapes/polyhole.scad>
 use <MCAD/fasteners/nuts_and_bolts.scad>
 use <utils.scad>
