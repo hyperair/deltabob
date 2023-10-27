@@ -90,7 +90,6 @@ module groovemount_screw_pillars (options)
 
     mcad_mirror_duplicate (Y)
     for (z = [1, -1] * screw_offset) {
-        render ()
         fillet (r = 3, steps = 10, include = false) {
             basic_fanduct_shape (options);
 
