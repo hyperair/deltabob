@@ -81,7 +81,7 @@ deltabob = (
             wall_thickness = 5,
 
             hinge_d = hinge_d,
-            hinge_elevation = 8,
+            hinge_elevation = belt_width + 7 + 2,
             hinge_spacing = hinge_spacing,
 
             belt_clamp_tooth_count = 8,

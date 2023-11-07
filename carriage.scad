@@ -178,6 +178,7 @@ module carriage_hinge_tether_block (options)
     extra_h = 2;
     height = hinge_elevation + extra_h;
     width = 10;
+    length = 15;
 
     /* offset to avoid intersecting with belt */
     x_offset = 2;
@@ -185,7 +186,7 @@ module carriage_hinge_tether_block (options)
     difference () {
         translate ([x_offset, width / 2 - extra_h, 0])
         filleted_cube (
-            [width, width, height],
+            [width, length, height],
             center = X + Y,
             fillet_sides = [0, 1, 2, 3],
             fillet_r = 3
@@ -194,7 +195,7 @@ module carriage_hinge_tether_block (options)
         /* 45° cutout */
         translate ([0, 0, hinge_elevation])
         rotate (45, X)
-        ccube ([20, 10, 10], center = X + Y);
+        ccube ([width * 1.5, length * 1.5, 10], center = X + Y);
 
         /* hole for string */
         translate ([0, 0, hinge_elevation])
@@ -215,13 +216,15 @@ module carriage (options)
     hinge_spacing = carriage_get_hinge_spacing (options);
     hinge_elevation = carriage_get_hinge_elevation (options);
 
-    mcad_mirror_duplicate (X)
-    translate ([hinge_spacing / 2, 0, thickness + hinge_elevation])
-    carriage_hinge (options);
+    translate ([0, -hinge_elevation / 2, 0]) {
+        mcad_mirror_duplicate (X)
+        translate ([hinge_spacing / 2, 0, thickness + hinge_elevation])
+        carriage_hinge (options);
 
-    /* middle block for hinge tether */
-    translate ([0, 0, thickness - epsilon])
-    carriage_hinge_tether_block (options);
+        /* middle block for hinge tether */
+        translate ([0, 0, thickness - epsilon])
+        carriage_hinge_tether_block (options);
+    }
 
     /* belt clamp */
     belt_clamp_length = carriage_get_belt_clamp_length (options);
