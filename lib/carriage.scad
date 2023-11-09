@@ -6,7 +6,8 @@ function Carriage (
     hinge_d, hinge_elevation, hinge_spacing,
     belt_clamp_tooth_count, belt_clamp_width, belt_clamp_height,
     belt_tensioner_block_width, belt_tensioner_block_height,
-    belt_tensioner_block_length, belt_tensioner_screw_distance,
+    belt_tensioner_block_length, belt_tensioner_block_hole_elevation,
+    belt_tensioner_screw_distance,
     belt_offset, belt_width, belt_thickness,
     belt_doubled_thickness
 ) =
@@ -28,6 +29,7 @@ function Carriage (
     ["belt_tensioner_block_width", belt_tensioner_block_width],
     ["belt_tensioner_block_height", belt_tensioner_block_height],
     ["belt_tensioner_block_length", belt_tensioner_block_length],
+    ["belt_tensioner_block_hole_elevation", belt_tensioner_block_hole_elevation],
 
     ["belt_offset", belt_offset],
     ["belt_width", belt_width],
@@ -71,6 +73,9 @@ function carriage_get_belt_tensioner_block_height (c) = (
 );
 function carriage_get_belt_tensioner_block_length (c) = (
     dict_get (c, "belt_tensioner_block_length")
+);
+function carriage_get_belt_tensioner_block_hole_elevation (c) = (
+    dict_get (c, "belt_tensioner_block_hole_elevation")
 );
 function carriage_get_belt_tensioner_screw_distance (c) = (
     let (belt_tensioner_block_width = carriage_get_belt_tensioner_block_width (

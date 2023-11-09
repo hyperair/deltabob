@@ -81,7 +81,7 @@ deltabob = (
             wall_thickness = 5,
 
             hinge_d = hinge_d,
-            hinge_elevation = belt_width + 7 + 2,
+            hinge_elevation = belt_width + 7 + 1,
             hinge_spacing = hinge_spacing,
 
             belt_clamp_tooth_count = 8,
@@ -89,8 +89,9 @@ deltabob = (
             belt_clamp_width = belt_thickness + 4 * 2,
 
             belt_tensioner_block_width = belt_thickness + 7 * 2,
-            belt_tensioner_block_height = belt_width + 7,
+            belt_tensioner_block_height = belt_width + 5,
             belt_tensioner_block_length = 10,
+            belt_tensioner_block_hole_elevation = (belt_width + 8) / 2,
 
             belt_offset = 5.093,
             belt_width = belt_width,

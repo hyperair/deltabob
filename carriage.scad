@@ -91,7 +91,7 @@ module carriage_belt_clamp (options)
 
     translate ([0, 0, -epsilon]) {
         difference () {
-            // maintain center positiona
+            // maintain center position
             filleted_cube (
                 [belt_clamp_width, belt_clamp_length, belt_clamp_height],
                 center = X + Y,
@@ -136,6 +136,9 @@ module carriage_tensioner_block (options)
         options);
     belt_tensioner_block_height = carriage_get_belt_tensioner_block_height (
         options);
+    belt_tensioner_block_elevation = (
+        carriage_get_belt_tensioner_block_hole_elevation (options)
+    );
 
     belt_tensioner_screw_distance = carriage_get_belt_tensioner_screw_distance (
         options);
@@ -157,7 +160,7 @@ module carriage_tensioner_block (options)
 
         // screwholes
         for (x = [1, -1] * belt_tensioner_screw_distance / 2)
-        translate ([x, 0, belt_tensioner_block_height / 2])
+        translate ([x, 0, belt_tensioner_block_elevation])
         rotate (-90, X) {
             mcad_polyhole (d = 3.3, h = 1000, center = true);
 
