@@ -70,6 +70,8 @@ deltabob = (
         belt_width = 6,
         belt_thickness = 1.38,
 
+        belt_tensioner_block_height = belt_width + 5,
+
         hinge_spacing = 50,
         hinge_d = 10,
 
@@ -81,7 +83,10 @@ deltabob = (
             wall_thickness = 5,
 
             hinge_d = hinge_d,
-            hinge_elevation = belt_width + 7 + 1,
+
+            // hinge centre needs to be taller than belt tensioner block for
+            // tether clearance
+            hinge_elevation = belt_tensioner_block_height + 3,
             hinge_spacing = hinge_spacing,
 
             belt_clamp_tooth_count = 8,
@@ -89,7 +94,7 @@ deltabob = (
             belt_clamp_width = belt_thickness + 4 * 2,
 
             belt_tensioner_block_width = belt_thickness + 7 * 2,
-            belt_tensioner_block_height = belt_width + 5,
+            belt_tensioner_block_height = belt_tensioner_block_height,
             belt_tensioner_block_length = 10,
             belt_tensioner_block_hole_elevation = (belt_width + 8) / 2,
 
