@@ -18,10 +18,7 @@ function Delta (
     probe,
     hotend,
     groovemount,
-    /*
-    rod,
-    effector,
-    */
+    print_fan_mount,
 
     delta_radius,
     rod_length,
@@ -43,6 +40,7 @@ function Delta (
     ["probe", probe],
     ["hotend", hotend],
     ["groovemount", groovemount],
+    ["print_fan_mount", print_fan_mount],
 
     ["delta_radius", delta_radius],
     ["rod_length", rod_length],
@@ -65,6 +63,7 @@ function delta_get_effector (d) = dict_get (d, "effector");
 function delta_get_probe (d) = dict_get (d, "probe");
 function delta_get_hotend (d) = dict_get (d, "hotend");
 function delta_get_groovemount (g) = dict_get (g, "groovemount");
+function delta_get_print_fan_mount (g) = dict_get (g, "print_fan_mount");
 
 function delta_get_delta_radius (d) = dict_get (d, "delta_radius");
 function delta_get_rod_length (d) = dict_get (d, "rod_length");

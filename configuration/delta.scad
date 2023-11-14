@@ -7,6 +7,7 @@ use <../lib/delta.scad>
 use <../lib/effector.scad>
 use <../lib/hotend.scad>
 use <../lib/groovemount.scad>
+use <../lib/print-fan-mount.scad>
 use <../lib/probe.scad>
 
 include <carriage.scad>
@@ -150,7 +151,12 @@ deltabob = (
             bowden_tube_d = 4,
             hotend_cap_arm_width = 15,
             hotend_cap_thickness = 10
-        )
+        ),
+
+        print_fan_mount = PrintFanMount (
+            fan = fan4010,
+            base_thickness = 3,
+        ),
     )
 
     Delta (
@@ -166,6 +172,7 @@ deltabob = (
         probe = probe,
         hotend = e3dv5,
         groovemount = groovemount,
+        print_fan_mount = print_fan_mount,
 
         delta_radius = 263.278 / 2,  // tweaked for 300mm horizontal extrusions
         rod_length = 138.5,

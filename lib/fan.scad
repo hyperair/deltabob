@@ -1,3 +1,4 @@
+use <MCAD/shapes/3Dshapes.scad>
 use <dict.scad>
 
 function AxialFan (width, thickness, corner_radius, screw_distance) = [
@@ -7,7 +8,7 @@ function AxialFan (width, thickness, corner_radius, screw_distance) = [
     ["screw_distance", screw_distance]
 ];
 
-function axial_fan_get_d (d) = axial_fan_get_width (d);
+function axial_fan_get_d (d) = axial_fan_get_width (d) - 2;
 function axial_fan_get_width (d) = dict_get (d, "width");
 function axial_fan_get_thickness (d) = dict_get (d, "thickness");
 function axial_fan_get_corner_radius (d) = dict_get (d, "corner_radius");
@@ -18,15 +19,17 @@ module axial_fan (options)
     width = axial_fan_get_width (options);
     thickness = axial_fan_get_thickness (options);
     corner_radius = axial_fan_get_corner_radius (options);
-    diameter = axial_fan_get_diameter (options);
+    diameter = axial_fan_get_d (options);
 
     difference () {
-        mcad_rounded_box (
+        mcad_rounded_cube (
             [width, width, thickness],
-            rounding_r = corner_radius,
-            sidesonly = true
+            radius = corner_radius,
+            sidesonly = true,
+            center = [1, 1, 0],
         );
 
-        cylinder (d = diameter, h = thickness * 2, center = true);
+        translate ([0, 0, -0.001])
+        cylinder (d = diameter, h = thickness * 2);
     }
 }
