@@ -155,7 +155,7 @@ deltabob = (
 
         print_fan_mount = PrintFanMount (
             fan = fan4010,
-            base_thickness = 3,
+            base_thickness = 4,
         ),
     )
 
