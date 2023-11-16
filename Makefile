@@ -1,6 +1,6 @@
 INKSCAPEDIR = /usr/share/inkscape/extensions/
 DXF_OUTLINES = $(INKSCAPEDIR)/dxf_outlines.py
-OPENSCAD = openscad
+OPENSCAD = openscad --enable manifold
 
 SCADFILES =					\
 	bedholder.scad				\
@@ -12,14 +12,10 @@ SCADFILES =					\
 	eccentric-spacer.scad			\
 	foot.scad				\
 	idler-spacer.scad			\
-	jaws.scad				\
 	joint.scad				\
 	top-corner.scad				\
 	tslotnut.scad				\
 	groovemount.scad			\
-	groovemount-top.scad			\
-	groovemount-bottom.scad			\
-	groovemount-cap.scad			\
 	retractable.scad			\
 	cable-cover.scad
 
