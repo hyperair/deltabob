@@ -68,26 +68,29 @@ module fan_plate (opts)
     }
 }
 
-module mount (opts) {
+module jaws (opts) {
     fan_opts = print_fan_mount_get_fan (opts);
     plate_thickness = print_fan_mount_get_base_thickness (opts);
 
     fan_width = axial_fan_get_width (fan_opts);
+    fan_thickness = axial_fan_get_thickness (fan_opts);
     fan_d = axial_fan_get_d (fan_opts);
 
     jaw_thickness = 1.5;
     gap_thickness = 2.5;
 
     thickness = jaw_thickness * 2 + gap_thickness;
-    width = 10;
-    length = 15;
-    angle = 45;
+    width = print_fan_mount_get_jaw_width (opts);
+    length = print_fan_mount_get_jaw_length (opts);
+    angle = print_fan_mount_get_jaw_angle (opts);
+    y_offset = print_fan_mount_get_y_offset (opts);
 
-    cutout_length = 8;
+    cutout_length = print_fan_mount_get_jaw_cutout_length (opts);
 
     difference() {
         // arm
         translate ([0, fan_width / 2]) {
+            translate ([0, y_offset])
             rotate (angle, X)
             translate ([0, length])
             rotate (90, Y)
@@ -128,7 +131,10 @@ module mount (opts) {
 
         // top cutout
         translate ([0, 0, plate_thickness])
-        ccube ([fan_width + 0.3, fan_width + 0.3, 100], center = X + Y);
+        ccube (
+            [fan_width + 0.3, fan_width + 0.3, fan_thickness + 0.3],
+            center = X + Y
+        );
 
         // air hole cutout
         translate ([0, 0, -epsilon])
@@ -136,14 +142,13 @@ module mount (opts) {
     }
 }
 
-*% axial_fan (
-    print_fan_mount_get_fan (
-        delta_get_print_fan_mount (deltabob)
-    )
-);
+module fan_mount (opts) {
+    fan_plate (opts);
+    jaws (opts);
 
-fan_plate (
-    delta_get_print_fan_mount (deltabob)
-);
+    %axial_fan (print_fan_mount_get_fan (opts));
+}
 
-mount (delta_get_print_fan_mount (deltabob));
+
+
+fan_mount (delta_get_print_fan_mount (deltabob));
