@@ -157,9 +157,9 @@ deltabob = (
             fan = fan4010,
             base_thickness = 4,
 
-            jaw_angle = 70,
-            jaw_cutout_length = 8,
+            jaw_angle = 80,
             jaw_length = 20,
+            jaw_cutout_length = 8,
             jaw_width = 10,
             jaw_y_offset = 2,
         ),
@@ -185,6 +185,7 @@ deltabob = (
         hinge_spacing = 50,
 
         plate_thickness = 5,
-        print_colour = "#223cb0"
+        corner_print_colour = "#223cb0",
+        effector_print_colour = "#222"
     )
 );

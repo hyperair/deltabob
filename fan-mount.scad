@@ -83,7 +83,7 @@ module jaws (opts) {
     width = print_fan_mount_get_jaw_width (opts);
     length = print_fan_mount_get_jaw_length (opts);
     angle = print_fan_mount_get_jaw_angle (opts);
-    y_offset = print_fan_mount_get_y_offset (opts);
+    y_offset = print_fan_mount_get_jaw_y_offset (opts);
 
     cutout_length = print_fan_mount_get_jaw_cutout_length (opts);
 
@@ -132,7 +132,7 @@ module jaws (opts) {
         // top cutout
         translate ([0, 0, plate_thickness])
         ccube (
-            [fan_width + 0.3, fan_width + 0.3, fan_thickness + 0.3],
+            [fan_width + 0.3, fan_width + 0.3, fan_thickness + 1],
             center = X + Y
         );
 
@@ -143,10 +143,14 @@ module jaws (opts) {
 }
 
 module fan_mount (opts) {
+    base_thickness = print_fan_mount_get_base_thickness (opts);
+
     fan_plate (opts);
     jaws (opts);
 
-    %axial_fan (print_fan_mount_get_fan (opts));
+    %
+    translate ([0, 0, base_thickness])
+    axial_fan (print_fan_mount_get_fan (opts));
 }
 
 

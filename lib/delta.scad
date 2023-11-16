@@ -25,7 +25,8 @@ function Delta (
     hinge_spacing,
 
     plate_thickness,
-    print_colour
+    corner_print_colour,
+    effector_print_colour,
 ) =
 [
     ["v_aluex", v_aluex],
@@ -47,7 +48,8 @@ function Delta (
     ["hinge_spacing", hinge_spacing],
 
     ["plate_thickness", plate_thickness],
-    ["print_colour", print_colour]
+    ["corner_print_colour", corner_print_colour],
+    ["effector_print_colour", effector_print_colour],
 ];
 
 function delta_get_v_aluex (d) = dict_get (d, "v_aluex");
@@ -70,7 +72,8 @@ function delta_get_rod_length (d) = dict_get (d, "rod_length");
 function delta_get_hinge_spacing (d) = dict_get (d, "hinge_spacing");
 
 function delta_get_plate_thickness (d) = dict_get (d, "plate_thickness");
-function delta_get_print_colour (d) = dict_get (d, "print_colour");
+function delta_get_corner_print_colour (d) = dict_get (d, "corner_print_colour");
+function delta_get_effector_print_colour (d) = dict_get (d, "effector_print_colour");
 
 function delta_get_v_circumferential (d) =
 (
