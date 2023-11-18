@@ -118,8 +118,9 @@ deltabob = (
             prong_width = 15,
             prong_height = 55,
 
-            magnet_d = 8.3,
-            magnet_h = 4
+            magnet_d = 8,
+            magnet_h = 4,
+            magnet_ball_d = hinge_d,
         ),
 
         probe = Probe (

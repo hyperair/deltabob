@@ -130,6 +130,7 @@ module effector_magnet_holes (opts)
 {
     magnet_d = effector_get_magnet_d (opts);
     magnet_h = effector_get_magnet_h (opts);
+    magnet_ball_d = effector_get_magnet_ball_d (opts);
     thickness = effector_get_thickness (opts);
 
     effector_place_magnets (opts) {
@@ -137,9 +138,31 @@ module effector_magnet_holes (opts)
         translate ([0, 0, thickness - thickness / 2])
         cylinder (d = magnet_d + 0.5, h = magnet_h);
 
-        /* centering holes */
+        /* centering cones */
+        ball_r = magnet_ball_d / 2;
+        cone_depth = thickness / 2;
+        ball_depth = cone_depth - 0.5;
+        chord_z_offset = 1;
+
+        chord_centre_distance = ball_r - ball_depth + chord_z_offset;
+        half_chord_angle = acos ((chord_centre_distance) / ball_r);
+        half_cone_angle = 90 - half_chord_angle;
+        cone_angle = half_cone_angle * 2;
+        half_chord_length = sqrt (pow (ball_r, 2) - pow (chord_centre_distance, 2));
+        chord_length = half_chord_length * 2;
+
+        cone_height_at_chord = half_chord_length / tan(half_cone_angle);
+        d1 = (
+            chord_length / cone_height_at_chord *
+            (cone_height_at_chord + chord_z_offset)
+        );
+        d2 = (
+            chord_length / cone_height_at_chord *
+            (cone_height_at_chord + chord_z_offset - cone_depth)
+        );
+        echo (d1, d2, cone_depth, cone_angle, cone_height_at_chord);
         translate ([0, 0, -epsilon])
-        cylinder (d1 = 5 + thickness / 2, d2 = 5, h = thickness / 2);
+        cylinder (d1 = d1, d2 = d2, h = cone_depth);
     }
 }
 
