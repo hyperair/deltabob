@@ -74,7 +74,7 @@ module probe_foot (probe)
 
     foot_length = probe_get_ring_width (probe);
     foot_width = switch_width + switchplate_thickness;
-    foot_depth = switch_height + 10;
+    foot_depth = switch_height + 15;
 
     module place_switch ()
     {
@@ -109,7 +109,7 @@ module probe_foot (probe)
 
         /* switch cutout */
         translate ([0, 0,-foot_depth])
-        ccube ([switch_width, switch_length, switch_height + 5],
+        ccube ([switch_width, switch_length, switch_height + 10],
                center = X + Y);
 
         /* microswitch screwholes */
