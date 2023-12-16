@@ -1,8 +1,8 @@
 use <MCAD/array/along_curve.scad>
 use <MCAD/array/mirror.scad>
-use <MCAD/shapes/boxes.scad>
 use <MCAD/shapes/polyhole.scad>
 use <MCAD/shapes/2Dshapes.scad>
+use <MCAD/shapes/3Dshapes.scad>
 use <MCAD/shapes/triangles.scad>
 use <MCAD/fasteners/nuts_and_bolts.scad>
 include <MCAD/units/metric.scad>
@@ -28,7 +28,7 @@ belt_clamp_tooth_count = 8;
 belt_x_offset = 5.093;          // 16-tooth pulley
 belt_width = 6;
 belt_thickness = 1.38;
-belt_doubled_thickness = 2;
+belt_doubled_thickness = 2.5;
 
 // static belt clamp dimensions
 belt_clamp1_length = belt_clamp_tooth_count * 2;
@@ -38,7 +38,7 @@ belt_y_offset1 = -(belt_clamp1_length - carriage_length) / 2;
 
 // adjustable belt clamp dimensions
 belt_clamp2_stator_length = 10;
-belt_clamp2_stator_height = belt_width + 7;
+belt_clamp2_stator_height = belt_width + 8;
 belt_clamp2_stator_width = belt_thickness + 7 * 2;
 belt_clamp2_screw_distance = (belt_clamp2_stator_width +
     belt_doubled_thickness) / 2;
@@ -63,7 +63,7 @@ module carriage_base ()
 {
     difference () {
         translate ([0, 0, carriage_base_thickness / 2])
-        mcad_rounded_box (
+        mcad_rounded_cube (
             size = [
                 carriage_width,
                 carriage_length,
@@ -171,12 +171,12 @@ module gt2_belt_clamp_adjustable_stator ()
 module gt2_belt_clamp_adjustable_movingpart ()
 {
     difference () {
-        ccube ([belt_clamp2_stator_width, belt_clamp2_stator_height, 5],
+        ccube ([belt_clamp2_stator_width, belt_clamp2_stator_height, 8],
             center = X + Y);
 
         // belt slot
-        mcad_rounded_box (
-            [belt_doubled_thickness, belt_clamp2_stator_height - 4, 1000],
+        mcad_rounded_cube (
+            [belt_doubled_thickness, belt_width + 2, 1000],
             radius = 1,
             sidesonly = true,
             center = true
@@ -295,4 +295,4 @@ carriage ();
 
 if (mode == "plate")
 translate ([carriage_width, 0, 0])
-gt2_belt_clamp_adjustable_movingpart ();
+!gt2_belt_clamp_adjustable_movingpart ();
