@@ -5,7 +5,7 @@ OPENSCAD = openscad --enable manifold
 SCADFILES =					\
 	bedholder.scad				\
 	ball-end.scad				\
-	ball-effector.scad			\
+	effector.scad				\
 	bottom-corner.scad			\
 	carriage.scad				\
 	crowned-idler.scad			\
