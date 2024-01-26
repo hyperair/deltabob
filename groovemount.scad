@@ -17,7 +17,7 @@ use <effector.scad>
 $fs = 0.4;
 $fa = 1;
 
-mode = "preview";
+mode = "print";
 
 
 module place_fan (options)
