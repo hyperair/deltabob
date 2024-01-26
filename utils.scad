@@ -192,7 +192,7 @@ cap_screw_head_diameters = [
  */
 module screwhole (size, length, nut_projection = "axial",
                   align_with = "above_head",
-                  screw_extra_length = 9999, head_extra_length = 9999,
+                  screw_extra_length = 1000, head_extra_length = 1000,
                   nut_projection_length = 100)
 {
     cap_head_d = lookup (size, cap_screw_head_diameters);
