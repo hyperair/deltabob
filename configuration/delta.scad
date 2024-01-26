@@ -141,8 +141,19 @@ deltabob = (
             ]
         ),
 
+        dragonv6 = Hotend (
+            sink_d = 22.3,
+            sink_h = 26.3,
+            whole_sink_h = 42.9,
+            groove_profile = [
+                [16.9, 4],
+                [12.9, 5.4],
+                [16.9, 7.5]
+            ]
+        ),
+
         groovemount = Groovemount (
-            hotend = e3dv5,
+            hotend = dragonv6,
             fan = fan4010,
             fan_inset_depth = 1,
             fan_offset = 7,
