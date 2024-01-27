@@ -355,7 +355,6 @@ if (mode == "preview") {
     rotate (-90, Y)
     groovemount_front (groovemount);
 
-
     translate ([0, -60])
     rotate (180, Z)
     rotate (90, Y)
