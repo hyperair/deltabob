@@ -109,14 +109,14 @@ deltabob = (
             hinge_d = hinge_d,
             hinge_spacing = hinge_spacing,
             hinge_elevation = 8,
-            hinge_offset = 40,
+            hinge_offset = 36,
 
-            cavity_d = 65,
+            cavity_d = 60,
             wall_thickness = 2,
             thickness = 8,
 
             prong_width = 15,
-            prong_height = 58,
+            prong_height = 51,
 
             magnet_d = 8,
             magnet_h = 4,
