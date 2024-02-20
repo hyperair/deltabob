@@ -152,8 +152,10 @@ deltabob = (
             ]
         ),
 
+        hotend = dragonv6,
+
         groovemount = Groovemount (
-            hotend = dragonv6,
+            hotend = hotend,
             fan = fan4010,
             fan_inset_depth = 1,
             fan_offset = 7,
@@ -188,7 +190,7 @@ deltabob = (
         carriage = carriage,
         effector = effector,
         probe = probe,
-        hotend = e3dv5,
+        hotend = hotend,
         groovemount = groovemount,
         print_fan_mount = print_fan_mount,
 
