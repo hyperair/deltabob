@@ -2,19 +2,20 @@ INKSCAPEDIR = /usr/share/inkscape/extensions/
 DXF_OUTLINES = $(INKSCAPEDIR)/dxf_outlines.py
 OPENSCAD = openscad --enable manifold
 
-SCADFILES =                                     \
-	bedholder.scad                          \
-	ball-end.scad                           \
-	corner-top.scad                         \
-	corner-bottom.scad                      \
-	effector.scad                           \
-	carriage.scad                           \
-	eccentric-spacer.scad                   \
-	foot.scad                               \
-	idler-spacer.scad                       \
-	tslotnut.scad                           \
-	groovemount.scad                        \
-	cable-cover.scad
+SCADFILES =                                             \
+	ball-end.scad                                   \
+	bedholder.scad                                  \
+	cable-cover.scad                                \
+	carriage.scad                                   \
+	corner-bottom.scad                              \
+	corner-top.scad                                 \
+	eccentric-spacer.scad                           \
+	effector.scad                                   \
+	foot.scad                                       \
+	groovemount.scad                                \
+	idler-spacer.scad                               \
+	magnetic-probe.scad                             \
+	tslotnut.scad
 
 STLFILES = $(SCADFILES:.scad=.stl)
 DEPFILES = $(addsuffix deps,$(SCADFILES))
