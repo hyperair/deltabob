@@ -8,6 +8,8 @@ use <../lib/delta.scad>
 use <../lib/print-fan-mount.scad>
 use <../lib/hotend.scad>
 use <../fan-mount.scad>
+use <../effector.scad>
+use <../groovemount.scad>
 
 $fs = 0.4;
 $fa = 1;
@@ -20,20 +22,26 @@ module effector_assembly(delta)
     effector = delta_get_effector (delta);
     effector_prong_height = effector_get_prong_height (effector);
 
+    groovemount = delta_get_groovemount (delta);
+
     print_colour = delta_get_effector_print_colour (delta);
 
     translate ([0, 0, 14.1]) {
         color (print_colour)
-        import ("../effector.stl");
+        // import ("../effector.stl");
+        effector (effector);
 
         rotate ([0, 0, -30 + 180])
         translate ([0, 0, -hotend_whole_sink_h + effector_prong_height])
         union () {
-            color (print_colour)
-            import ("groovemount-assembly.stl");
+            color (print_colour) {
+                // import ("groovemount-assembly.stl");
+                groovemount_base_shape (groovemount);
+                groovemount_hotend_cap (groovemount, effector);
+            }
 
             /* fan */
-            %translate ([25, 0, 21])
+            %translate ([24, 0, 21])
              rotate ([0, -90, 0])
              color("#333")
              mcad_rounded_cube ([40, 40, 10], radius=3, sidesonly=true, center=true);
