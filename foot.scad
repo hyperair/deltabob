@@ -1,5 +1,5 @@
 use <MCAD/shapes/2Dshapes.scad>
-use <MCAD/shapes/boxes.scad>
+use <MCAD/shapes/3Dshapes.scad>
 use <MCAD/shapes/polyhole.scad>
 use <MCAD/array/along_curve.scad>
 use <utils.scad>
@@ -20,7 +20,7 @@ wire_hole_depth = wire_hole_d + 1;
 module base_shape ()
 {
     difference () {
-        mcad_rounded_box (
+        mcad_rounded_cube (
             concat (foot_dimensions_2, [foot_round_r + foot_height]),
             radius = 2);
 
