@@ -18,7 +18,7 @@ SCADFILES =                                             \
 	tslotnut.scad
 
 STLFILES = $(SCADFILES:.scad=.stl)
-DEPFILES = $(addsuffix deps,$(SCADFILES))
+DEPFILES = $(addsuffix deps,$(SCADFILES)) assembly/groovemount.scaddeps
 
 all: $(STLFILES)
 
@@ -29,7 +29,7 @@ all: $(STLFILES)
 	$(OPENSCAD) -d $<deps -m $(MAKE) -o $@ $<
 
 assembly/groovemount-assembly.stl: groovemount.scad
-	$(OPENSCAD) -Dmode='"preview"' -d $<deps -m $(MAKE) -o $@ $<
+	$(OPENSCAD) -Dmode='"preview"' -d assembly/$<deps -m $(MAKE) -o $@ $<
 
 clean:
 	rm $(STLFILES) $(DEPFILES)
